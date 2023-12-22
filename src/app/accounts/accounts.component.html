@@ -1,0 +1,38 @@
+<div class="content-part">
+    <div class="wrapper">
+        <div class="container py-10 py-md-10">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="left-container">
+                        <a class="d-flex align-items-center">
+                            <p class="p-font-20 mb-0" style="font-weight: 700;">+91 {{account["username"]}}</p>
+                        </a>
+                        <a class="d-flex align-items-center" routerLinkActive="active" [href]="['/myaccount/user-identity']">
+                            <i class="uil uil-user-plus"></i>
+                            <p class="p-font-20 mb-0">My Profile</p>
+                        </a>
+                        <a class="d-flex align-items-center" routerLinkActive="active" [href]="['/myaccount/order-returns']">
+                            <i class="uil uil-shopping-cart"></i>
+                            <p class="p-font-20 mb-0">Orders & Returns</p>
+                        </a>
+                        <a class="d-flex align-items-center" routerLinkActive="active" [href]="['/myaccount/address']">
+                            <i class="uil uil-map-marker"></i>
+                            <p class="p-font-20 mb-0">Address</p>
+                        </a>
+                        <button class="d-flex align-items-center" style="border: none;" (click)="logout()">
+                            <i class="uil uil-sign-out-alt"></i>
+                            <p class="p-font-20 mb-0" >Logout</p>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="right-container">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<app-footer></app-footer>

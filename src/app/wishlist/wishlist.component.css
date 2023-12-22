@@ -1,0 +1,25 @@
+figure img{
+    height: 354px !important;
+    object-fit: contain;
+    box-shadow: 2px 2px 4px 5px #eee;
+    padding: 10px;
+
+}
+.avatar {
+    padding: 5px 10px;
+    width: auto;
+    text-align: center;
+    border-radius: 4px;
+
+}
+
+.lottie-svg {
+    height: 200px;
+}
+
+/* .project.item figure img {
+    height: 300px !important;
+    object-fit: contain;
+    box-shadow: 2px 2px 4px 5px #eee;
+    padding: 10px;
+} */

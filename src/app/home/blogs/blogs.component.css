@@ -1,0 +1,36 @@
+.w-90 {
+    width: 95%;
+    padding-bottom: 35px;
+}
+
+.overlay:not(.overlay-3):hover span.bg {
+    opacity: 1;
+    transition: opacity .35s ease-in-out;
+}
+
+.overlay span.bg {
+    position: relative;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    cursor: pointer !important;
+    opacity: 0;
+    z-index: 4;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 34, 40, .6);
+}
+
+.limitText{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    margin-bottom: 0;
+    line-clamp: 15;
+    -webkit-box-orient: vertical;
+}

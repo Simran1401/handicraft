@@ -1,0 +1,14 @@
+.limitText{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    margin-bottom: 0;
+    line-clamp: 15;
+    -webkit-box-orient: vertical;
+}
+
+.isotope{
+    height:  auto !important;
+    position: unset !important;
+}

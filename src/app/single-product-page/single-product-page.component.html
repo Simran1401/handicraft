@@ -1,0 +1,682 @@
+<div class="content-part" *ngIf="!error;else error_component">
+    <section class="wrapper bg-gray">
+        <div class="container py-3 py-md-5">
+            <nav class="d-inline-block" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a [href]="['/']">Home</a></li>
+                    <li class="breadcrumb-item"><a [href]="['/']">Shop</a></li>
+                    <li class="breadcrumb-item active text-muted" aria-current="page">Product</li>
+                </ol>
+            </nav>
+            <!-- /nav -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /section -->
+    <section class="wrapper bg-light" *ngIf="!loader && products">
+        <div class="container pt-14 pt-md-16 pb-0">
+            <div class="row gx-md-8 gx-xl-12 gy-8">
+                <div class="col-lg-6">
+                    <div class="main-image">
+                        <img [src]="mainImage" alt="Main Image">
+                        <button class="img-modal-btn" data-bs-toggle="modal" data-bs-target="#imgModal">
+                            <i class="uil uil-focus-add"></i>
+                        </button>
+                    </div>
+                    <div class="mini-images">
+                        <img [src]="products?.image" alt="Thumbnail Image" (click)="changeMainImage(products?.image)">
+                        <img *ngIf="products?.image1" [src]="products?.image1" alt="Thumbnail Image" (click)="changeMainImage(products?.image1)">
+                        <img *ngIf="products?.image2" [src]="products?.image2" alt="Thumbnail Image" (click)="changeMainImage(products?.image2)">
+                        <img *ngIf="products?.image3" [src]="products?.image3" alt="Thumbnail Image" (click)="changeMainImage(products?.image3)">
+                    </div>
+                    <!-- /.swiper-container -->
+                </div>
+                <!-- /column -->
+                <div class="col-lg-6">
+                    <div class="post-header mb-5">
+                        <h2 class="post-title display-5"><a href="./shop-product.html" class="link-dark">{{products?.title}}</a></h2>
+                        <p class="price fs-20 mb-2">
+                            <span class="avatar bg-pink text-white text-uppercase fs-13" style="top: 1rem; left: 1rem;">
+                            <span>{{getDiscount(variations[v_id])}}% OFF</span>
+                            </span>
+                        </p>
+                        <p class="price fs-20 mb-2">
+                            <del><span class="amount">₹{{variations[v_id].mrp}}</span></del>
+                            <ins><span class="amount">₹{{variations[v_id].discount_price}}</span></ins>
+                        </p>
+                        <!-- <div *ngIf="variations[v_id]?.addon_product?.title">
+                            <p class="price fs-20 mb-2">Addon Product:</p>
+                            <p class="price fs-20 mb-2"><span class="amount">Title: {{variations[v_id]?.addon_product?.title}}</span></p>
+                        </div> -->
+
+                        <!-- <a href="#" class="link-body ratings-wrapper"><span class="ratings four"></span><span>(3
+                                Reviews)</span></a> -->
+                    </div>
+                    <!-- /.post-header -->
+                    <form>
+                        <!-- <fieldset class="picker">
+                        <legend class="h6 fs-16 text-body mb-3">Choose a size</legend>
+                        <label for="size-xs">
+                            <input type="radio" name="sizes" id="size-xs" checked>
+                            <span>XS</span>
+                        </label>
+                        <label for="size-s">
+                            <input type="radio" name="sizes" id="size-s">
+                            <span>S</span>
+                        </label>
+                        <label for="size-m">
+                            <input type="radio" name="sizes" id="size-m">
+                            <span>M</span>
+                        </label>
+                        <label for="size-l">
+                            <input type="radio" name="sizes" id="size-l">
+                            <span>L</span>
+                        </label>
+                        <label for="size-xl">
+                            <input type="radio" name="sizes" id="size-xl">
+                            <span>XL</span>
+                        </label>
+                    </fieldset> -->
+                        <fieldset class="picker">
+                            <legend class="h6 fs-16 text-body mb-3">Choose a color</legend>
+                            <label *ngFor="let variant of variations;let i=index" for="color-1" [style]="'--color:' + variant?.color?.color_code">
+                                <input type="radio" name="colors" id="color-1">
+                                <span (click)="v_id=i"
+                                    [style.box-shadow]="i===v_id ? '0 0 0 2px #fff, 0 0 0 4px' + variant.color.color_code : 'none'">{{variant.color.title}}</span>
+                            </label>
+                            <!-- <label for="color-2" style="--color:#e2626b">
+                                <input type="radio" name="colors" id="color-2">
+                                <span>Red</span>
+                            </label>
+                            <label for="color-3" style="--color:#7cb798">
+                                <input type="radio" name="colors" id="color-3">
+                                <span>Green</span>
+                            </label>
+                            <label for="color-4" style="--color:#3f78e0">
+                                <input type="radio" name="colors" id="color-4">
+                                <span>Blue</span>
+                            </label>
+                            <label for="color-5" style="--color:#a07cc5">
+                                <input type="radio" name="colors" id="color-5">
+                                <span>Purple</span>
+                            </label> -->
+                        </fieldset>
+                        <div class="mb-4" *ngIf="variations[v_id]?.addon_product?.title">
+                            <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="FreeGift-freeGiftIcon">
+                                <path d="M24 0H0v24L24 0Z" fill="#ff6699"></path>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M3.825 3.625c0 .219.052.433.15.625h-1.35a.375.375 0 0 0-.375.375v2.25c0 .207.168.375.375.375H3v4.125c0 .207.168.375.375.375h7.25a.375.375 0 0 0 .375-.375V7.25h.375a.375.375 0 0 0 .375-.375v-2.25a.375.375 0 0 0-.375-.375h-1.351a1.378 1.378 0 0 0-.254-1.6 1.362 1.362 0 0 0-.97-.4c-.909 0-1.457.654-1.754 1.194L7 3.531a3.667 3.667 0 0 0-.046-.087C6.657 2.904 6.109 2.25 5.2 2.25a1.374 1.374 0 0 0-1.375 1.375ZM5.2 3a.624.624 0 1 0 0 1.25h1.298a3.34 3.34 0 0 0-.202-.444C6.043 3.346 5.691 3 5.2 3Zm2.302 1.25H8.8a.624.624 0 0 0 .44-1.07A.612.612 0 0 0 8.8 3c-.491 0-.843.346-1.096.806-.084.152-.15.307-.202.444ZM7.375 5v1.5H11V5H7.375Zm-.75 0v1.5H3V5h3.625Zm.75 6h2.875V7.25H7.375V11Zm-.75-3.75V11H3.75V7.25h2.875Z"
+                                    fill="#fff">
+                                </path>
+                            </svg>
+                            <div class="FreeGift-freeGiftContainer">
+                                <div style=" margin-left: 5px;" class="w-70"><span class="FreeGift-heading">Get a
+                                        Free Gift {{variations[v_id]?.addon_product?.title}}</span>
+                                </div>
+                                <div class="FreeGift-imageContainer"><img class="FreeGift-image" src="{{variations[v_id]?.addon_product?.image}}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="mb-3">
+                            <div class="available h6 fs-16 text-body">Available in:</div>
+                            <div class="variant">
+                                <div *ngFor="let variant of variations;let i=index" (click)="v_id=i"
+                                    [ngClass]="{'selected':i===v_id}">{{variant.unit_value}}</div>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-lg-9 d-flex flex-row pt-2">
+                                <div>
+                                    <div class="form-select-wrapper">
+                                        <select class="form-select" *ngIf="!cart[variations[v_id]['id']]" (change)="onSelect($event)">
+                                            <option [ngValue]="option"
+                                                *ngFor="let option of createArrayUpToNumber(variations[v_id].order_limit)"
+                                                [attr.selected]="option == currentQty ? true : null">{{option}}</option>
+                                            <!-- <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option> -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class=" ms-2">
+                                    <button *ngIf="!account" (click)="$event.stopPropagation()" data-bs-toggle="modal" data-bs-target="#modal-signin" class="btn btn-primary btn-icon btn-icon-start rounded ">
+                                        <i class="uil uil-heart me-0"></i>
+                                    </button>
+                                    <button *ngIf="isInWishlist(products.id) && account" (click)="removeFromWishlist(products.id)" class="btn btn-primary btn-icon btn-icon-start rounded ">
+                                        <i class="uil uil-heart me-0"></i>
+                                    </button>
+                                    <button *ngIf="!isInWishlist(products.id) && account" (click)="addToWishlist(products.id)" class="btn btn-secondary btn-icon btn-icon-start rounded ">
+                                        <i class="uil uil-heart me-0"></i>
+                                    </button>
+                                </div>
+                                <div class="flex-grow-1 mx-2" *ngIf="cart[variations[v_id]['id']]">
+                                    <button class="btn btn-primary btn-icon btn-icon-start rounded w-100 flex-grow-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-cart"><i
+                                            class="uil uil-shopping-bag"></i> Go to Cart</button>
+                                </div>
+                                <div class="flex-grow-1 mx-2" *ngIf="!cart[variations[v_id]['id']]">
+                                    <button class="btn btn-primary btn-icon btn-icon-start rounded w-100 flex-grow-1" (click)="addproduct(products,variations[v_id], 2)"><i
+                                            class="uil uil-shopping-bag"></i> Add to Cart</button>
+                                </div>
+                                <div class="flex-grow-1 mx-2" *ngIf="incDecBtn">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button type="button" class=" btn btn-primary inc-dec-btn" (click)="showAddToCart()"><i class="uil uil-minus"></i></button>
+                                        <b class="quantity">1</b>
+                                        <button type="button" class=" btn btn-primary inc-dec-btn"><i
+                                                class="uil uil-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- <div>
+                                <button class="btn btn-block btn-red btn-icon rounded px-3 w-100 h-100"><i
+                                        class="uil uil-heart"></i></button>
+                            </div> -->
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- /form -->
+                </div>
+                <!-- /column -->
+            </div>
+            <!-- /.row -->
+            <ul class="nav nav-tabs nav-tabs-basic mt-12 tabs-flex">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#tab1-1">Product Details</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tab1-2">Ratings And Reviews</a>
+                </li> -->
+            </ul>
+            <!-- /.nav-tabs -->
+            <div class="tab-content mt-0 mt-md-5">
+                <div class="tab-pane fade show active" id="tab1-1">
+                    <p [innerHTML]="products?.description"></p>
+                    
+                </div>
+                <!--/.tab-pane -->
+                <!-- <div class="tab-pane fade" id="tab1-2">
+
+                    <div class="row gx-md-8 gx-xl-12 gy-10">
+                        <aside class="col-lg-4 sidebar">
+                            <div class="widget mt-10">
+                                <h4 class="widget-title mb-3">Review this product</h4>
+                                <p class="mb-5">Aenean eu leo quam ornare sem lacinia quam.</p>
+                                <a href="#" class="btn btn-primary rounded w-100" data-bs-toggle="modal"
+                                    data-bs-target="#reviewModal">Write a Review</a>
+                            </div>
+                        </aside>
+                        <div class="col-lg-8">
+                            <div class="row align-items-center mb-10 position-relative zindex-1">
+                                <div class="col-md-7 col-xl-8 pe-xl-20">
+                                    <h2 class="display-6 mb-0">Ratings & Reviews</h2>
+                                </div>
+                                <div class="col-md-5 col-xl-4 ms-md-auto text-md-end mt-5 mt-md-0">
+                                    <div class="form-select-wrapper">
+                                        <select class="form-select">
+                                            <option value="newest">Sort by newest</option>
+                                            <option value="oldest">Sort by oldest</option>
+                                            <option value="popular">Sort by popularity</option>
+                                            <option value="high-rating">Sort by high rating</option>
+                                            <option value="low-rating">Sort by low rating</option>
+                                        </select>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div id="comments">
+                                <ol id="singlecomments" class="commentlist">
+                                    <li class="comment">
+                                        <div class="comment-header d-md-flex align-items-center">
+                                            <figure class="user-avatar"><img class="rounded-circle" alt=""
+                                                    src="./assets/img/avatars/u1.jpg" /></figure>
+                                            <div>
+                                                <h6 class="comment-author"><a href="#" class="link-dark">Connor
+                                                        Gibson</a>
+                                                </h6>
+                                                <ul class="post-meta">
+                                                    <li><i class="uil uil-calendar-alt"></i>14 Jan 2022</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mt-5 mb-2">
+                                             <span class="ratings five"></span> 
+                                            <h6 class="mb-0">Highly recommended!</h6>
+                                        </div>
+                                        <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
+                                            vestibulum.
+                                            Duis
+                                            mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia
+                                            odio
+                                            sem nec
+                                            elit. Sed posuere consectetur est at lobortis integer posuere erat ante.</p>
+
+                                    </li>
+                                    <li class="comment">
+                                        <div class="comment-header d-md-flex align-items-center">
+                                            <figure class="user-avatar"><img class="rounded-circle" alt=""
+                                                    src="./assets/img/avatars/u2.jpg" /></figure>
+                                            <div>
+                                                <h6 class="comment-author"><a href="#" class="link-dark">Nikolas
+                                                        Brooten</a>
+                                                </h6>
+                                                <ul class="post-meta">
+                                                    <li><i class="uil uil-calendar-alt"></i>21 Feb 2022</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mt-5 mb-2">
+                                            <span class="ratings four"></span>
+                                            <h6 class="mb-0">Great product</h6>
+                                        </div>
+                                        <p>Quisque tristique tincidunt metus non aliquam. Quisque ac risus sit amet quam
+                                            sollicitudin vestibulum vitae malesuada libero. Mauris magna elit, suscipit
+                                            non
+                                            ornare
+                                            et, blandit a tellus. Pellentesque dignissim ornare faucibus mollis.</p>
+
+                                    </li>
+                                </ol>
+                            </div>
+                            <nav class="d-flex mt-10" aria-label="pagination">
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" aria-label="Previous">
+                                            <span aria-hidden="true"><i class="uil uil-arrow-left"></i></span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link">1</a></li>
+                                    <li class="page-item"><a class="page-link">2</a></li>
+                                    <li class="page-item"><a class="page-link">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" aria-label="Next">
+                                            <span aria-hidden="true"><i class="uil uil-arrow-right"></i></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <!-- /.tab-content -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+    <section class="wrapper bg-light" *ngIf="loader">
+        <div class="container py-14 py-md-16">
+            <div class="row gx-md-8 gx-xl-12 gy-8">
+                <div class="col-lg-6">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 450,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 100,
+                    'width.%':20,
+                    'margin-right':'10px',            'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+            'height.px': 100,
+            'width.%':20,
+            'margin-right':'10px',    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <!-- /.swiper-container -->
+                </div>
+                <!-- /column -->
+                <div class="col-lg-6">
+                    <div class="post-header mb-5">
+                        <ngx-skeleton-loader count="1" [theme]="{
+                            'height.px': 25,
+                            'width.%':90,
+                      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 20,
+                        'width.%':25,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 20,
+                    'width.%':45,
+              'background-color': '#F9F7F6',
+            'display':'block',}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 20,
+                'width.%':35,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 20,
+    'width.%':20,
+    'background-color': '#F9F7F6',
+    'display':'block',}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 15,
+    'width.%':100,
+    'background-color': '#F9F7F6',
+    'display':'block',}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 35,
+    'width.px':35,
+    'border-radius':'50%',
+    'margin-right':'10px',
+    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 35,
+    'width.px':35,
+    'border-radius':'50%',
+    'margin-right':'10px',
+    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 35,
+    'width.px':35,
+    'border-radius':'50%',
+    'margin-right':'10px',
+    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 35,
+    'width.px':35,
+    'border-radius':'50%',
+    'margin-right':'10px',
+    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        <ngx-skeleton-loader count="1" [theme]="{
+    'height.px': 55,
+    'width.%':65,
+    'display':'block',
+    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    </div>
+                    <!-- /.post-header -->
+
+                    <!-- /form -->
+                </div>
+                <!-- /column -->
+            </div>
+            <!-- /.row -->
+            <ul class="nav nav-tabs nav-tabs-basic mt-12">
+                <li class="nav-item">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 25,
+                        'width.%':90,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </li>
+                <li class="nav-item">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 25,
+                        'width.%':90,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </li>
+            </ul>
+            <!-- /.nav-tabs -->
+            <div class="tab-content mt-0 mt-md-5">
+                <div class="tab-pane fade show active" id="tab1-1">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 15,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 15,
+                'width.%':100,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 15,
+        'width.%':100,
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+      'height.px': 15,
+      'width.%':100,
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+      'height.px': 15,
+      'width.%':100,
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <!--/.tab-pane -->
+                <div class="tab-pane fade" id="tab1-2">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 15,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 15,
+                'width.%':100,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 15,
+        'width.%':100,
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+      'height.px': 15,
+      'width.%':100,
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+      'height.px': 15,
+      'width.%':100,
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+            </div>
+            <!-- /.tab-content -->
+        </div>
+    </section>
+    <!-- /section -->
+    <section class="wrapper bg-light similar-prod-div" *ngIf="!loader && more_like_this?.length">
+        <div class="container py-14 py-md-16">
+            <h3 class="h2 mb-6 text-center">You Might Also Like</h3>
+            <div class="d_flex">
+                <div class="swiper-slide project item" *ngFor="let dataa of more_like_this">
+                    <figure class="rounded mb-6">
+                        <img [src]="dataa.image" [alt]="dataa.title" />
+                        <button *ngIf="!account" class="item-like" (click)="$event.stopPropagation()" data-bs-toggle="modal" data-bs-target="#modal-signin"><svg style="color: red;"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                            </svg></button>
+                        <button *ngIf="isInWishlist(dataa.id) && account" class="item-like" (click)="removeFromWishlist(dataa.id)"><svg style="color: red;"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                            </svg></button>
+                        <button *ngIf="!isInWishlist(dataa.id) && account" class="item-like" (click)="addToWishlist(dataa.id)"><svg style="color: black;"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                            </svg></button>
+                        <!-- <a class="item-like" href="#" data-bs-toggle="white-tooltip" title="Add to wishlist">
+                            <i class="uil uil-heart"></i>
+                        </a> -->
+                        <a class="item-view" [href]="'/p/'+dataa.id" data-bs-toggle="white-tooltip" title="Quick view">
+                            <i class="uil uil-eye"></i>
+                        </a>
+                        <button type="button" class="item-cart" style="border: none;" *ngIf="cart[variationss(dataa).id]" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-cart">
+                            <i class="uil uil-shopping-bag"></i> Go To Cart
+                        </button>
+                        <button type="button" class="item-cart" style="border: none;" *ngIf="!cart[variationss(dataa).id]" (click)="addproduct1(dataa,dataa.variations)">
+                            <i class="uil uil-shopping-bag"></i> Add to Cart
+                        </button>
+                        <span class="avatar bg-pink text-white position-absolute text-uppercase fs-13" style="top: 1rem; left: 1rem;">
+                            <span>{{getDiscount(variationss(dataa))}}% OFF</span>
+                        </span>
+                    </figure>
+                    <div class="post-header">
+                        <div class="d-flex flex-row align-items-center justify-content-between mb-2">
+                            <div class="post-category text-ash mb-0">{{dataa.category.title}}</div>
+                            <!-- <span class="ratings five"></span> -->
+                        </div>
+                        <h2 class="post-title h3 fs-22">
+                            <a [href]="'/p/'+dataa.id" class="link-dark">{{ truncate(dataa.title) }}</a>
+                        </h2>
+                        <p class="price">
+                            <del><span class="amount">₹{{variationss(dataa).mrp}}</span></del>
+                            <ins><span class="amount">₹{{variationss(dataa).discount_price}}</span></ins>
+                        </p>
+                    </div>
+                    <!-- /.post-header -->
+                </div>
+            </div>
+            <div class="swiper-container blog grid-view shop mb-6" data-margin="30" data-dots="true" data-items-xl="3" data-items-md="2" data-items-xs="1">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        <!-- <div class="swiper-slide project item" *ngFor="let dataa of more_like_this">
+                        <figure class="rounded mb-6">
+                            <img [src]="dataa.image" [alt]="dataa.title" />
+                            <a class="item-like" href="#" data-bs-toggle="white-tooltip" title="Add to wishlist">
+                                <i class="uil uil-heart"></i>
+                            </a>
+                            <a class="item-view" href="#" data-bs-toggle="white-tooltip" title="Quick view">
+                                <i class="uil uil-eye"></i>
+                            </a>
+                            <a class="item-cart" *ngIf="cart[dataa.id]" (click)="showBlackIncDecBtn()">
+                                <i class="uil uil-shopping-bag"></i> Go To Cart
+                            </a>
+                            <a class="item-cart" *ngIf="!cart[dataa.id]" (click)="showBlackIncDecBtn()">
+                                <i class="uil uil-shopping-bag"></i> Add to Cart
+                            </a>
+                            <span class="avatar bg-pink text-white w-10 h-10 position-absolute text-uppercase fs-13"
+                                style="top: 1rem; left: 1rem;">
+                                <span>Sale!</span>
+                            </span>
+                        </figure>
+                        <div class="post-header">
+                            <div class="d-flex flex-row align-items-center justify-content-between mb-2">
+                                <div class="post-category text-ash mb-0">Shoes</div>
+                                <span class="ratings five"></span>
+                            </div>
+                            <h2 class="post-title h3 fs-22">
+                                <a href="./shop-product.html" class="link-dark">{{ truncate(dataa.title) }}</a>
+                            </h2>
+                            <p class="price">
+                                <del><span class="amount">$55.00</span></del>
+                                <ins><span class="amount">$45.00</span></ins>
+                            </p>
+                        </div>
+                    </div> -->
+                    </div>
+                    <!--/.swiper-wrapper -->
+                </div>
+                <!-- /.swiper -->
+            </div>
+            <!-- /.swiper-container -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <section class="wrapper bg-light similar-prod-div" *ngIf="loader">
+        <div class="container py-14 py-md-16">
+            <div class="row">
+                <div class="col-sm-3">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 300,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 15,
+                'width.%':30,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 20,
+        'width.%':90,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+  'height.px': 15,
+  'width.%':70,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <div class="col-sm-3">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 300,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 15,
+                'width.%':30,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 20,
+        'width.%':90,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+  'height.px': 15,
+  'width.%':70,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <div class="col-sm-3">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 300,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 15,
+                'width.%':30,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 20,
+        'width.%':90,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+  'height.px': 15,
+  'width.%':70,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <div class="col-sm-3">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 300,
+                        'width.%':100,
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 15,
+                'width.%':30,
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 20,
+        'width.%':90,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+  'height.px': 15,
+  'width.%':70,
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+            </div>
+            <!-- /.swiper-container -->
+        </div>
+    </section>
+    <!-- /section -->
+    <!-- /section -->
+    <app-features></app-features>
+    <!-- /section -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wrtie a Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <textarea placeholder="write your review here" rows="4" class="review_area"></textarea>
+                        <span _ngcontent-aia-c7="" class="ratings five" style="font-size: 2rem; display: block;"></span>
+                        <button class="btn btn-primary mt-5">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #error_component>
+    <div class="no-results">
+        <!-- <div class="no-result-image"><img alt="no results" src="assets/images/no-result.svg"></div> -->
+        <div class="no-result-matching">NO RESULTS FOUND MATCHING</div>
+    </div>
+</ng-template>
+
+<div class="modal fade" id="imgModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                <img [src]="mainImage" alt="Main Image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,168 @@
+.steps{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background: #ff6699;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    font-size: 24px;
+    z-index: 3;
+}
+
+.steps-div{
+    position: relative;
+}
+
+.steps::after{
+    content: '';
+    height: calc(100% - 70px);
+    width: 2px;
+    position: absolute;
+    background: #ff6699;
+    top: 60px;
+    z-index: -1;
+}
+
+.steps-last-one::after{
+    display: none;
+}
+
+.d_flex{
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    transform: translate(0,-50%);
+}
+
+.number_{
+    padding-left: 60px;
+    width: 100%;
+}
+
+.pos-rel{
+    width: 50%;
+    margin-right: 10px;
+}
+
+.steps-div:not(:last-child){
+    padding-bottom: 40px;
+}
+
+.pl{
+    padding-left:calc(50px + 0.75rem)
+}
+
+.otp_div{
+    width: 40px;
+    height: 45px;
+    padding: 5px 8px;
+}
+
+.otp_div:not(:last-child){
+    margin-right: 10px;
+}
+
+.plus{
+    border: 1px dashed;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+.add-address{
+    width: 33%;
+    border: 1px solid #edeff3;
+    height: 140px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.addresses_div{
+    border: 1px solid #edeff3;
+    border-radius: 4px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.edit-btn{
+    padding: 0px 15px;
+}
+
+.edit-btn:not(:last-child){
+    margin-right: 5px;
+}
+
+.link-dark{
+    font-size: 18px;
+}
+
+.someClass {
+    background-color: #fbf1f4;
+}
+
+.checkoutModal {
+    padding: 150px 0;
+    text-align: center;
+}
+
+.lottie-success {
+    height: 250px;
+}
+
+.FreeGift-freeGiftIcon {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+}
+
+.FreeGift-freeGiftContainer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    padding: 17px 23px;
+    border-bottom: 1.5px solid #eaeaec;
+    border-top: 1.5px solid #eaeaec;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+
+.FreeGift-imageContainer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 60px;
+    width: 60px;
+    border: 1.5px solid #e9e9eb;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-left: 10px;
+}
+
+.FreeGift-image {
+    height: 55px;
+    width: 55px;
+    background-color: #fff;
+}
+
+.FreeGift-heading{
+    font-size: 16px;
+}

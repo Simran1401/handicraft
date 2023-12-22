@@ -1,0 +1,20 @@
+<section class="wrapper bg-gray">
+  <div class="container py-10 py-md-10 mt-3">
+    <div class="row gx-lg-8 gx-xl-12 gy-8">
+      <div class="col-md-6 col-lg-4" *ngFor="let feature of features">
+        <div class="d-flex flex-row">
+          <div class="feature-img">
+            <img src="{{getImagePath(feature.icon)}}" alt="Feature Icon" class="feature-icon">
+          </div>
+          <div>
+            <h4 class="mb-1">{{feature.title}}</h4>
+            <p class="mb-0">{{feature.description}}</p>
+          </div>
+        </div>
+      </div>
+      <!--/column -->
+    </div>
+    <!--/.row -->
+  </div>
+  <!-- /.container -->
+</section>

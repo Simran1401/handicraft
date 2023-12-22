@@ -1,0 +1,8 @@
+.limitText{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    margin-bottom: 0;
+    -webkit-box-orient: vertical;
+}

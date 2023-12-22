@@ -1,0 +1,59 @@
+<div class="w-100">
+    <form class="search-form w-100" [formGroup]="search">
+        <input id="search-form" type="text" class="form-control" placeholder="Type keyword and hit enter"
+            formControlName="searchItem" (keyup.esc)="clear()" 
+            (keyup.enter)="searchIt()" (click)="show_bg=true" 
+            (click)="$event.stopPropagation()" (input)="openInput()">
+        <div class="position-absolute w-100 h-300" (click)="$event.stopPropagation()" *ngIf="show">
+            <div class="first" *ngIf="products?.length">
+            <div *ngFor="let value of products;let i=index">
+                <div  class="d-flex mb-2" *ngIf="value?.variations">
+                <figure class="rounded w-17"><a [href]="'/p/'+value?.id"><img [src]="value?.image" alt="" /></a></figure>
+                <div class="w-100 ms-4">
+                    <div class="small">{{getDiscount(variation(value))}}% OFF</div>
+                    <h3 class="post-title h6 lh-xs mb-1"><a [href]="'/p/'+value?.id" class="link-dark">{{value?.title}}</a></h3>
+                    <p class="price"><del><span class="amount">MRP ₹{{value?.variations?.mrp}}</span></del> <ins><span
+                                class="amount"> ₹{{value?.variations?.discount_price}}</span></ins></p>
+                </div>
+                </div>
+            </div>
+            <!-- <div class="d-flex mb-2">
+                <figure class="rounded w-17"><a href="./shop-product.html"><img src="./assets/img/photos/sth1.jpg"
+                            srcset="./assets/img/photos/sth1@2x.jpg 2x" alt="" /></a></figure>
+                <div class="w-100 ms-4">
+                    <div class="small">10% Off</div>
+                    <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html" class="link-dark">Nike Air
+                            Sneakers</a></h3>
+                    <p class="price"><del><span class="amount">$55.00</span></del> <ins><span
+                                class="amount">$45.99</span></ins></p>
+                </div>
+            </div>
+            <div class="d-flex mb-2">
+                <figure class="rounded w-17"><a href="./shop-product.html"><img src="./assets/img/photos/sth1.jpg"
+                            srcset="./assets/img/photos/sth1@2x.jpg 2x" alt="" /></a></figure>
+                <div class="w-100 ms-4">
+                    <div class="small">10% Off</div>
+                    <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html" class="link-dark">Nike Air
+                            Sneakers</a></h3>
+                    <p class="price"><del><span class="amount">$55.00</span></del> <ins><span
+                                class="amount">$45.99</span></ins></p>
+                </div>
+            </div>
+            <div class="d-flex mb-2">
+                <figure class="rounded w-17"><a href="./shop-product.html"><img src="./assets/img/photos/sth1.jpg"
+                            srcset="./assets/img/photos/sth1@2x.jpg 2x" alt="" /></a></figure>
+                <div class="w-100 ms-4">
+                    <div class="small">10% Off</div>
+                    <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html" class="link-dark">Nike Air
+                            Sneakers</a></h3>
+                    <p class="price"><del><span class="amount">$55.00</span></del> <ins><span
+                                class="amount">$45.99</span></ins></p>
+                </div>
+            </div> -->
+            </div>
+            <div class="second" *ngIf="products?.length">
+                <a [href]="searchUrl">Explore all products matching  <b>"{{searchValue}}"</b> ({{allProducts?.length}})</a>
+            </div>
+        </div>
+    </form>
+</div>

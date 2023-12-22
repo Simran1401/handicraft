@@ -1,0 +1,659 @@
+<div class="content-part" *ngIf="!error;else error_component">
+    <section class="wrapper bg-gray">
+        <div class="container py-3 py-md-5">
+            <nav class="d-inline-block" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a [href]="['/']">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Shop</li>
+                </ol>
+            </nav>
+            <!-- /nav -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /section -->
+    <section class="wrapper bg-light" *ngIf="!loader">
+        <div class="container pb-14 pb-md-16 pt-12">
+            <div class="row gy-10">
+                <div class="col-lg-9 order-lg-2">
+                    <div class="row align-items-center mb-10 position-relative zindex-1">
+                        <div class="ro-1">
+                            <div class="col-md-7 col-xl-8 pe-xl-20">
+                                <h2 class="display-6 mb-1">New Arrivals</h2>
+                                <p class="mb-0 text-muted">Showing 1–9 of 30 results</p>
+                            </div>
+                            <div class="mob-ro">
+                                <button class="btn btn-soft-sky" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterBtn" aria-controls="offcanvasRight">Filter</button>
+                            </div>
+                        </div>
+                        <!--/column -->
+                        <div class="col-md-5 col-xl-4 ms-md-auto text-md-end mt-5 mt-md-0">
+                            <div class="form-select-wrapper">
+                                <select class="form-select" [(ngModel)]="selectedSortOption" (ngModelChange)="filterandsort()">
+                                    <option selected value="sort">Sort by :</option>
+                                    <option value="priceAscending">Price (Low to High)</option>
+                                    <option value="priceDescending">Price (High to Low)</option>
+                                    <option value="nameAscending">Name (A-Z)</option>
+                                    <option value="nameDescending">Name (Z-A)</option>
+                                </select>
+                            </div>
+                            <!--/.form-select-wrapper -->
+                        </div>
+                        <!--/column -->
+                    </div>
+                    <!--/.row -->
+                    <div class="grid grid-view projects-masonry shop mb-13">
+                        <div class="row gx-md-8 gy-10 gy-md-13 isotope" *ngIf="filteredProducts?.length > 0">
+                            <div class="product-card-oj col-md-6 col-xl-4" *ngFor="let data of filteredProducts | paginate: { itemsPerPage: 12, currentPage: page }">
+                                <div class="project item" *ngIf="data?.variations">
+                                    <figure class="rounded mb-6">
+                                        <img [src]="data.image" alt="" />
+                                        <button *ngIf="!account" (click)="$event.stopPropagation()" class="item-like" data-bs-toggle="modal" data-bs-target="#modal-signin">
+                                            <svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" fill="currentColor" class="bi bi-suit-heart-fill"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                                            </svg>
+                                        </button>
+                                        <button *ngIf="isInWishlist(data.id) && account" class="item-like" (click)="removeFromWishlist(data.id)"><svg style="color: red;"
+                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                                            </svg></button>
+                                        <button *ngIf="!isInWishlist(data.id) && account" class="item-like" (click)="addToWishlist(data.id)"><svg style="color: black;"
+                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                                            </svg></button>
+                                        <!-- <a class="item-like" href="#" data-bs-toggle="white-tooltip"
+                                            title="Add to wishlist"><i class="uil uil-heart"></i></a> -->
+                                        <a class="item-view" [href]="'/p/'+data.id" data-bs-toggle="white-tooltip" title="Quick view"><i class="uil uil-eye"></i></a>
+
+                                        <button class="item-cart" *ngIf="cart[variation(data).id]" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-cart"><i
+                                                class="uil uil-shopping-bag"></i> Go to Cart</button>
+                                        <button class="item-cart" *ngIf="!cart[variation(data).id]" (click)="addproduct(data,data.variations)"><i
+                                                class="uil uil-shopping-bag"></i>
+                                            Add to Cart</button>
+                                        <span class="avatar bg-pink text-white position-absolute text-uppercase fs-13" style="top: 1rem; left: 1rem;"><span>{{getDiscount(variation(data))}}% OFF</span></span>
+                                    </figure>
+                                    <div class="post-header">
+                                        <div class="d-flex flex-row align-items-center justify-content-between mb-2">
+                                            <div class="post-category text-ash mb-0">
+                                                {{truncateCat(data.category.title)}}
+                                            </div>
+                                        </div>
+                                        <h2 class="post-title h3 fs-22"><a [href]="'/p/'+data.id" class="link-dark">{{truncate(data.title)}}</a></h2>
+                                        <p class="price"><del><span class="amount">₹{{variation(data).mrp}}</span></del>
+                                            <ins><span class="amount">₹{{variation(data).discount_price}}</span></ins>
+                                        </p>
+                                    </div>
+                                    <!-- /.post-header -->
+                                </div>
+                            </div>
+                            <!-- /.item -->
+                        </div>
+                        <div class="row gx-md-8 gy-10 gy-md-13 isotope" *ngIf="filteredProducts?.length == 0">
+                            <div class="lottie-svg">
+                                <ng-lottie [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie>
+                            </div>
+                            <h1 class="text-center">No Products To Show
+                            </h1>
+                            <!-- /.item -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.grid -->
+                    <nav class="d-flex" aria-label="pagination">
+                        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+                        <!-- <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true"><i class="uil uil-arrow-left"></i></span>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true"><i class="uil uil-arrow-right"></i></span>
+                            </a>
+                        </li>
+                    </ul> -->
+                        <!-- /.pagination -->
+                    </nav>
+                    <!-- /nav -->
+                </div>
+                <!-- /column -->
+                <aside class="col-lg-3 sidebar">
+                    <div _ngcontent-vbv-c95="" id="accordionPanelsStayOpenExample" class="accordion">
+                        <div _ngcontent-vbv-c95="" class="accordion-item">
+                            <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne" class="accordion-button"> Categories
+                                </button>
+                            </h4>
+                            <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseOne" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                                <div _ngcontent-vbv-c95="" class="accordion-body">
+                                    <div class="form-check mb-1" *ngFor="let subcat of subCategories">
+                                        <input class="form-check-input" type="checkbox" id="xs" (change)="updateSubcategory(subcat.title)" [checked]="subCategoriesCurrent.includes(subcat)">
+                                        <label class="form-check-label" for="xs">{{subcat.title}}
+                                             <!-- <span
+                                                class="fs-sm text-muted ms-1">(23)</span> -->
+                                            </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="widget mt-2" *ngIf="!hide_brand">
+                    <h4 class="widget-title mb-3">Brands</h4>
+
+                    <div class="form-check mb-1" *ngFor="let brand of brands">
+                        <input class="form-check-input" type="checkbox" id="xs" (change)="updateBrand(brand)"
+                            [checked]="brandsCurrent.includes(brand)">
+                        <label class="form-check-label" for="xs">{{brand}} <span
+                                class="fs-sm text-muted ms-1">(23)</span></label>
+                    </div>
+                </div> -->
+                    <!-- <div class="widget mt-2">
+                    <h4 class="widget-title mb-3">Discount</h4>
+                    
+                    <div class="form-check mb-1" *ngFor="let discount of discountList">
+                        <input class="form-check-input" type="checkbox" id="xs" (change)="updateDiscount(discount)" [checked]="discountIncludes(discount)">
+                        <label class="form-check-label" for="xs">{{discount.name}} <span
+                                class="fs-sm text-muted ms-1">(23)</span></label>
+                    </div>
+                </div> -->
+                    <!-- <div class="widget">
+                        <h4 class="widget-title mb-3">Rating</h4>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="rating" id="rating5" checked>
+                            <label class="form-check-label" for="rating5">
+                                <span class="ratings five"></span>
+                            </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="rating" id="rating4">
+                            <label class="form-check-label" for="rating4">
+                                <span class="ratings four"></span>
+                            </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="rating" id="rating3">
+                            <label class="form-check-label" for="rating3">
+                                <span class="ratings three"></span>
+                            </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="rating" id="rating2">
+                            <label class="form-check-label" for="rating2">
+                                <span class="ratings two"></span>
+                            </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="rating" id="rating1">
+                            <label class="form-check-label" for="rating1">
+                                <span class="ratings one"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <h4 class="widget-title mb-3">Size</h4>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="xs" checked>
+                            <label class="form-check-label" for="xs">XS <span
+                                    class="fs-sm text-muted ms-1">(23)</span></label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="s">
+                            <label class="form-check-label" for="s">S <span
+                                    class="fs-sm text-muted ms-1">(253)</span></label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="m">
+                            <label class="form-check-label" for="m">M <span
+                                    class="fs-sm text-muted ms-1">(65)</span></label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="l">
+                            <label class="form-check-label" for="l">L <span
+                                    class="fs-sm text-muted ms-1">(156)</span></label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="xl">
+                            <label class="form-check-label" for="xl">XL <span
+                                    class="fs-sm text-muted ms-1">(74)</span></label>
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <h4 class="widget-title mb-3">Price</h4>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="price" id="price1" checked>
+                            <label class="form-check-label" for="price1"> $0.00 - $50.00 </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="price" id="price2">
+                            <label class="form-check-label" for="price2"> $0.00 - $50.00 </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="price" id="price3">
+                            <label class="form-check-label" for="price3"> $50.00 - $100.00 </label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="price" id="price4">
+                            <label class="form-check-label" for="price4"> $150.00 - $200.00 </label>
+                        </div>
+                        <div class="row">
+                            <div class="col-7 col-md-5 col-lg-12 col-xl-10 col-xxl-10">
+                                <div class="d-flex align-items-center mt-4">
+                                    <input type="number" class="form-control form-control-sm" placeholder="$0.00"
+                                        min="0">
+                                    <div class="text-muted mx-2">‒</div>
+                                    <input type="number" class="form-control form-control-sm" placeholder="$50.00"
+                                        max="50">
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="wrapper bg-light py-10" *ngIf="loader">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 35,
+                        'width.%':100,
+                        'display':'block',
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 25,
+                'width.%':80,
+                'display':'block',
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 25,
+        'width.%':80,
+        'display':'block',
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+'height.px': 25,
+'width.%':80,
+'display':'block',
+'background-color': '#F9F7F6',
+'margin-bottom':'30px'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+'height.px': 35,
+'width.%':100,
+'display':'block',
+'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+'height.px': 25,
+'width.%':80,
+'display':'block',
+'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+'height.px': 25,
+'width.%':80,
+'display':'block',
+'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+'height.px': 25,
+'width.%':80,
+'display':'block',
+'background-color': '#F9F7F6',
+'margin-bottom':'30px'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 35,
+                        'width.%':100,
+                        'display':'block',
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                'height.px': 25,
+                'width.%':80,
+                'display':'block',
+          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+        'height.px': 25,
+        'width.%':80,
+        'display':'block',
+  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+'height.px': 25,
+'width.%':80,
+'display':'block',
+'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 25,
+                                'width.%':40,
+                                'display':'block',
+                          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 15,
+                        'width.%':50,
+                        'display':'block',
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        </div>
+                        <div class="col-md-5">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 45,
+                                'width.%':100,
+                                'display':'block',
+                          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="grid grid-view projects-masonry shop mb-13">
+                        <div class="row gx-md-8 gy-10 gy-md-13 isotope">
+                            <div class="product-card-oj col-md-6 col-xl-4">
+                                <ngx-skeleton-loader count="1" [theme]="{
+                                    'height.px': 300,
+                                    'width.%':100,
+                              'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+                            'height.px': 15,
+                            'width.%':30,
+                            'display':'block',
+                      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 15,
+                    'width.%':80,
+              'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+            'height.px': 15,
+            'width.%':40,
+            'display':'block',
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                            </div>
+                            <div class="product-card-oj col-md-6 col-xl-4">
+                                <ngx-skeleton-loader count="1" [theme]="{
+                                    'height.px': 300,
+                                    'width.%':100,
+                              'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+                            'height.px': 15,
+                            'width.%':30,
+                            'display':'block',
+                      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 15,
+                    'width.%':80,
+              'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+            'height.px': 15,
+            'width.%':40,
+            'display':'block',
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                            </div>
+                            <div class="product-card-oj col-md-6 col-xl-4">
+                                <ngx-skeleton-loader count="1" [theme]="{
+                                    'height.px': 300,
+                                    'width.%':100,
+                              'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+                            'height.px': 15,
+                            'width.%':30,
+                            'display':'block',
+                      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 15,
+                    'width.%':80,
+              'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{
+            'height.px': 15,
+            'width.%':40,
+            'display':'block',
+      'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="wrapper bg-light" *ngIf="loader">
+        <div class="container pb-14 pb-md-16 pt-12">
+            <div class="row gy-10">
+                <div class="col-lg-9 order-lg-2">
+                    <div class="row align-items-center mb-10">
+                        <div class="col-md-7 col-xl-8 pe-xl-20">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 25,
+                                'width.%':40,
+                                'display':'block',
+                          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 15,
+                        'width.%':50,
+                        'display':'block',
+                  'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                        </div>
+                        <!--/column -->
+                        <div class="col-md-5 col-xl-4 ms-md-auto text-md-end mt-5 mt-md-0">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 45,
+                                'width.%':100,
+                                'display':'block',
+                          'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                            <!--/.form-select-wrapper -->
+                        </div>
+                        <!--/column -->
+                    </div>
+                    <!--/.row -->
+                    <div class="grid grid-view projects-masonry shop mb-13">
+                        <div class="row gx-md-8 gy-10 gy-md-13 isotope" *ngIf="filteredProducts?.length > 0">
+                            <div class="product-card-oj col-md-6 col-xl-4" *ngFor="let data of filteredProducts | paginate: { itemsPerPage: 12, currentPage: page }">
+                                <div class="project item" *ngIf="data?.variations">
+                                    <figure class="rounded mb-6">
+                                        <img [src]="data.image" alt="" />
+                                        <a class="item-like" href="#" data-bs-toggle="white-tooltip" title="Add to wishlist"><i class="uil uil-heart"></i></a>
+                                        <a class="item-view" href="#" data-bs-toggle="white-tooltip" title="Quick view"><i class="uil uil-eye"></i></a>
+                                        <button class="item-cart" *ngIf="cart[variation(data).id]" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-cart"><i
+                                                class="uil uil-shopping-bag"></i> Go to Cart</button>
+                                        <button class="item-cart" *ngIf="!cart[variation(data).id]" (click)="addproduct(data,data.variations)"><i
+                                                class="uil uil-shopping-bag"></i>
+                                            Add to Cart</button>
+                                        <span class="avatar bg-pink text-white w-10 h-10 position-absolute text-uppercase fs-13" style="top: 1rem; left: 1rem;"><span>{{discount(data)}}</span></span>
+                                    </figure>
+                                    <div class="post-header">
+                                        <div class="d-flex flex-row align-items-center justify-content-between mb-2">
+                                            <div class="post-category text-ash mb-0">
+                                                {{truncateCat(data.category.title)}}
+                                            </div>
+                                        </div>
+                                        <h2 class="post-title h3 fs-22"><a [href]="'/p/'+data.id" class="link-dark">{{truncate(data.title)}}</a></h2>
+                                        <p class="price"><del><span class="amount">₹{{variation(data).mrp}}</span></del>
+                                            <ins><span class="amount">₹{{variation(data).discount_price}}</span></ins>
+                                        </p>
+                                    </div>
+                                    <!-- /.post-header -->
+                                </div>
+                            </div>
+                            <!-- /.item -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.grid -->
+                    <nav class="d-flex" aria-label="pagination">
+                        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+                    </nav>
+                    <!-- /nav -->
+                </div>
+                <!-- /column -->
+                <aside class="col-lg-3 sidebar">
+
+                </aside>
+            </div>
+        </div>
+    </section>
+    <!-- /section -->
+    <app-features></app-features>
+    <!-- /section -->
+</div>
+
+<ng-template #error_component>
+    <div class="no-results">
+        <!-- <div class="no-result-image"><img alt="no results" src="assets/images/no-result.svg"></div> -->
+        <div class="no-result-matching">NO RESULTS FOUND MATCHING</div>
+    </div>
+</ng-template>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="filterBtn" aria-labelledby="offcanvasRightLabel">
+    <div class="d-flex justify-content-between align-items-center offHeader">
+        <h2 id="offcanvasRightLabel" class="mb-0">Filters</h2>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="uil uil-times"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="filter-body">
+            <div _ngcontent-vbv-c95="" id="accordionPanelsStayOpenExample" class="accordion">
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne" class="accordion-button"> Categories
+                        </button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseOne" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let subcat of subCategories">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateSubcategory(subcat.title)" [checked]="subCategoriesCurrent.includes(subcat)">
+                                <label class="form-check-label" for="xs">{{subcat.title}}
+                                     <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item" *ngIf="!hide_brand">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo" class="accordion-button">Brands</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseTwo" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let brand of brands">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateBrand(brand)" [checked]="brandsCurrent.includes(brand)">
+                                <label class="form-check-label" for="xs">{{brand}}
+                                     <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree" class="accordion-button">Processor</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseThree" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let pro of processors">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateProcessor(pro)" [checked]="processorsCurrent.includes(pro)">
+                                <label class="form-check-label" for="xs">{{pro}} 
+                                    <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour" class="accordion-button">Operating
+                            System</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseFour" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let opsys of operatingsystems">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateOperatingSystem(opsys)" [checked]="operatingsystemsCurrent.includes(opsys)">
+                                <label class="form-check-label" for="xs">{{opsys}}
+                                     <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive" class="accordion-button">Storage</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseFive" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let st of storages">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateStorage(st)" [checked]="storagesCurrent.includes(st)">
+                                <label class="form-check-label" for="xs">{{st}} 
+                                    <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="true" aria-controls="panelsStayOpen-collapseSix" class="accordion-button">Screen Size</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseSix" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let ss of screenSizes">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateScreenSizes(ss)" [checked]="screenSizesCurrent.includes(ss)">
+                                <label class="form-check-label" for="xs">{{ss}} 
+                                    <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSeven" aria-expanded="true" aria-controls="panelsStayOpen-collapseSeven" class="accordion-button">RAM</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseSeven" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1" *ngFor="let ram of rams">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateRams(ram)" [checked]="ramsCurrent.includes(ram)">
+                                <label class="form-check-label" for="xs">{{ram}} GB 
+                                    <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div _ngcontent-vbv-c95="" class="accordion-item">
+                    <h4 id="panelsStayOpen-headingOne" class="accordion-header widget-title mb-3"><button _ngcontent-vbv-c95="" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEight" aria-expanded="true" aria-controls="panelsStayOpen-collapseEight" class="accordion-button">Other</button>
+                    </h4>
+                    <div _ngcontent-vbv-c95="" id="panelsStayOpen-collapseEight" aria-labelledby="panelsStayOpen-headingOne" class="accordion-collapse collapse show">
+                        <div _ngcontent-vbv-c95="" class="accordion-body">
+                            <div class="form-check mb-1">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateWebCam()" [(ngModel)]="webcam">
+                                <label class="form-check-label" for="xs">Webcam 
+                                    <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                            <div class="form-check mb-1">
+                                <input class="form-check-input" type="checkbox" id="xs" (change)="updateTouchScreen()" [(ngModel)]="touchScreen">
+                                <label class="form-check-label" for="xs">Touch Screen 
+                                    <!-- <span
+                                        class="fs-sm text-muted ms-1">(23)</span> -->
+                                    </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

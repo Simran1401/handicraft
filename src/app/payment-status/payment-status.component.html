@@ -1,0 +1,55 @@
+<app-header></app-header>
+<div class="content-part">
+
+    <div *ngIf="!error;else error_component">
+        <div *ngIf="loading">Loading...</div>
+        <div *ngIf="!loading">
+            <div *ngIf="success;else not_done">
+                <div class="success">
+                    <div class="container-fluid">
+                        <div class="card ">
+                            <div class="lottie-success">
+                                <ng-lottie [options]="options" (animationCreated)="animationCreated($event)" style="height: 270px;display: block;"></ng-lottie>
+                            </div>
+                            <!-- <img src="../../assets/images/home-page/Tick.svg" alt=""> -->
+                            <p class="">Your order has been placed. This is your Transaction ID: {{data?.TransactionId}}</p>
+                            <p class="p-14-lg">We will keep you updated about your order process</p>
+                            <button class="btn btn-primary" routerLink="/">CONTINUE SHOPPING</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #not_done>
+                <div class="success">
+                    <div class="container-fluid">
+                        <div class="card pt-3 pt-sm-5">
+                            <div class="lottie-success">
+                                <ng-lottie [options]="options2" (animationCreated)="animationCreated2($event)" style="height: 250px;display: block;"></ng-lottie>
+                            </div>
+                            <!-- <img src="../../assets/images/home-page/Tick.svg" alt=""> -->
+                            <h2>Payment Failed</h2>
+                            <p class="">Something's gone wrong</p>
+                            <button class="btn btn-primary" routerLink="/">Back to store</button>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <ng-template #error_component>
+        <div class="success">
+            <div class="container-fluid">
+                <div class="card pt-3 pt-sm-5">
+                    <div class="lottie-success">
+                        <ng-lottie [options]="options3" (animationCreated)="animationCreated3($event)" style="height: 250px;display: block;"></ng-lottie>
+                    </div>
+                    <!-- <img src="../../assets/images/home-page/Tick.svg" alt=""> -->
+                    <!-- <h2>Payment Failed</h2> -->
+                    <p class="">Something's gone wrong from server side</p>
+                    <button class="btn btn-primary" routerLink="/">Back to store</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+<app-footer></app-footer>

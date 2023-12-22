@@ -1,0 +1,140 @@
+/* You can add global styles to this file, and also import other style files */
+.progress-wrap {
+  right: auto;
+  left: 1.5rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.swiper-controls {
+  top: 10% !important;
+}
+
+.content-part {
+  padding-top: 107px;
+}
+
+.slick-dots {
+  top: 100%;
+}
+
+.slick-dots li button:before {
+  content: "" !important;
+  width: 0.5rem !important;
+  height: 0.5rem !important;
+  margin: 0 0.3rem !important;
+  padding: 0 !important;
+  background: #aab0bc !important;
+  opacity: .5 !important;
+  border-radius: 50% !important;
+}
+
+.slick-dots li.slick-active button:before {
+  color: black;
+  border: 3px solid #aab0bc;
+  opacity: 0.75 !important;
+  background: #fff !important;
+}
+
+.carousel-control-next, .carousel-control-prev {
+  width: 8% !important;
+}
+
+.carousel-control-prev-icon {
+  background-image: none !important;
+  background: rgba(255, 255, 255, .7);
+  color: #343f52;
+  border: 0;
+  box-shadow: 0 0.25rem 0.75rem rgba(30, 34, 40, .02);
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.carousel-control-next-icon {
+  background-image: none !important;
+  background: rgba(255, 255, 255, .7);
+  color: #343f52;
+  border: 0;
+  box-shadow: 0 0.25rem 0.75rem rgba(30, 34, 40, .02);
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.carousel-control-prev-icon::after {
+  font-family: Unicons;
+  font-size: 1.2rem;
+  content: "\e949";
+}
+
+.carousel-control-next-icon::after {
+  font-family: Unicons;
+  font-size: 1.2rem;
+  content: "\e94c";
+}
+
+.btn-close:focus {
+  outline: 0;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.item-like{
+  border: none;
+}
+
+.navbar-stick{
+  display: none !important;
+}
+
+.ngx-pagination .current{
+  background: #ff6699 !important;
+}
+
+@media (max-width:1280px) {
+  .content-part {
+    padding-top: 92px;
+  }
+}
+
+@media (max-width:1024px) {
+  .content-part {
+    padding-top: 80px;
+  }
+}
+
+@media (max-width:992px) {
+  .content-part {
+    padding-top: 200px;
+  }
+}
+
+@media (max-width:765px) {
+  .category-swiper .swiper-controls {
+    top: 10% !important;
+  }
+
+  .content-part {
+    padding-top: 150px;
+  }
+
+  .carousel-control-next, .carousel-control-prev {
+    width: 14% !important;
+  }
+}

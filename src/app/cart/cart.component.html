@@ -1,0 +1,67 @@
+<div class="pos-abs">
+    <div class="offcanvas-header">
+        <h3 class="mb-0" *ngIf="totalCount">Your Cart <span>({{totalCount}} items)</span></h3>
+        <h3 class="mb-0" *ngIf="!cart?.length">Your Cart </h3>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+        <div class="shopping-cart" *ngIf="cart?.length; else emptyCart">
+            <div *ngFor="let value of cart" class="shopping-cart-item d-flex justify-content-between mb-4">
+                <div class="d-flex flex-row">
+                    <figure class="rounded w-17"><a href="./shop-product.html"><img [src]="value?.details?.image"
+                                [alt]="value?.details?.title" alt=""></a></figure>
+                    <div class="w-100 ms-4">
+                        <h3 class="post-title fs-16 lh-xs mb-1"><a href="./shop-product.html"
+                                class="link-dark">{{value?.details?.title}}</a></h3>
+                        <p class="price fs-sm"><del><span
+                                    class="amount">₹{{value?.details?.variation?.mrp.toFixed(2)}}</span></del>
+                            <ins><span
+                                    class="amount">&nbsp;₹{{value?.details?.variation?.discount_price?.toFixed(2)}}</span></ins>
+                        </p>
+                        <div class="form-select-wrapper">
+                            <select class="form-select form-select-sm" (change)="onSelect($event, value)">
+                                <option *ngFor="let option of createArrayUpToNumber(value?.details?.variation?.order_limit)" [ngValue]="option"
+                                    [attr.selected]="option == value.count ? true : null">
+                                    {{option}} </option>
+                                <!-- <option value="1" selected="">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option> -->
+                            </select>
+                        </div>
+                        <!--/.form-select-wrapper -->
+                    </div>
+                </div>
+                <div class="ms-2"><button class="link-dark" (click)="removeItemFromCart(value)"><i
+                            class="uil uil-trash-alt"></i></button></div>
+            </div>
+            <!--/.shopping-cart-item -->
+        </div>
+        <ng-template #emptyCart>
+            <!-- Actual data content -->
+            <div class="lottie-svg">
+                <ng-lottie [options]="options"
+                    (animationCreated)="animationCreated($event)"></ng-lottie>
+            </div>
+            <!-- <img src="../../assets/img/empty-cart-2130356-1800917 1.svg" width="100%" alt=""> -->
+            <h1 class="text-center">
+                No Items In Your Cart
+            </h1>
+        </ng-template>
+        <!-- /.shopping-cart-->
+        <!-- /.offcanvas-footer-->
+    </div>
+    <div class="offcanvas-footer flex-column text-center">
+        <div class="d-flex w-100 justify-content-between mb-4" *ngIf="cart?.length;">
+            <span>Subtotal:</span>
+            <span class="h6 mb-0">₹{{subTotal?.toFixed(2)}}</span>
+        </div>
+        <a [href]="['/checkout']" *ngIf="cart?.length;"
+            class="btn btn-primary btn-icon btn-icon-start rounded w-100 mb-4"><i class="uil uil-credit-card fs-18"></i>
+            Checkout</a>
+        <a [href]="['/']" *ngIf="!cart?.length;" class="btn btn-primary btn-icon btn-icon-start rounded w-100 mb-4"><i
+                class="uil uil-credit-card fs-18"></i> Start Shopping</a>
+        <!-- <p class="fs-14 mb-0" *ngIf="cart?.length;">Free shipping on all orders over $50</p> -->
+    </div>
+</div>

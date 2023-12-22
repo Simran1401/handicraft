@@ -1,0 +1,34 @@
+.left-container .d-flex{
+    width: 100%;
+    background: #fbf1f4 ;
+    padding: 15px 10px 15px 20px;
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.left-container i{
+    
+    font-size: 20px;
+    margin-right: 10px;
+
+}
+
+
+/* .left-container .d-flex.active{
+    background: #e6e8ec;
+} */
+.selected, .active {
+    background-color: var(--background);
+}
+
+@media (max-width:992px) {
+    .left-container{
+        display: none;
+    }
+
+    .col-sm-9{
+        width: 100%;
+    }
+}

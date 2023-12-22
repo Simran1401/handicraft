@@ -1,0 +1,57 @@
+<!-- <div class="bg-soft-primary pad-box mb-3">
+    <h3>User Details</h3>
+    <p class="mb-0">Username&nbsp;:&nbsp;+91 {{details.username}}</p>
+    <p class="mb-0">Total Points&nbsp;:&nbsp;{{details.points?details.points:'0'}}</p>
+</div> -->
+
+<div class="bg-soft-primary pad-box">
+    <h3 class="mb-5">Personal Information</h3>
+    <form [formGroup]="profile" (ngSubmit)="submit()" *ngIf="!loading">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="form-floating mb-4">
+                    <input formControlName="first_name" type="text" class="form-control" id="inputPassword4" placeholder="Name">
+                    <label for="inputPassword4">Name</label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-floating mb-4">
+                    <input formControlName="email" type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    <label for="inputEmail4">Email</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="form-floating mb-4">
+                    <input formControlName="mobile" type="number" class="form-control" id="inputMobileNo" placeholder="Mobile Number">
+                    <label for="inputMobileNo">Mobile Number</label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-floating mb-4">
+                    <input formControlName="dob" type="date" class="form-control" id="inputDate" placeholder="Date">
+                    <label for="inputEDate">Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary w-100">Update</button>
+        </div>
+    </form>
+
+    <div class="container" *ngIf="loading">
+        <div class="row gx-md-8 gx-xl-12 gy-12">
+            <div class="col-sm-12">
+                <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 400,
+                    'width.%':100,
+                    'margin-bottom':'20px',
+                    'background-color': '#F9F7F6',
+                    'display':'block'}">
+                </ngx-skeleton-loader>
+            </div>
+        </div>
+       
+    </div>
+</div>

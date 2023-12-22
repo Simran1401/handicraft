@@ -1,0 +1,805 @@
+<app-header></app-header>
+<div class="content-part">
+    <section class="wrapper bg-gray">
+        <div class="container py-3 py-md-5">
+            <nav class="d-inline-block" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item"><a href="#">Cart</a></li>
+                    <li class="breadcrumb-item active text-muted" aria-current="page">Checkout</li>
+                </ol>
+            </nav>
+            <!-- /nav -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /section -->
+    <section class="wrapper bg-light" *ngIf="!checkoutDone && !loader">
+        <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+            <div class="row gx-md-8 gx-xl-12 gy-12">
+                <div class="col-lg-8">
+                    <div class="steps-div">
+                        <div class="d-flex align-items-center">
+                            <div class="steps me-3">1</div>
+                            <h4 class="mb-0 ">Login/Sign Up</h4>
+                        </div>
+                        <div class="w-100 pl mt-3" [ngStyle]="{'display': first ? 'none' : 'block'}">
+                            <form class="w-100" *ngIf="enterNumber" [formGroup]="signin"  method="POST">
+                                <label for="">Enter your phone number to Login/Sign up</label>
+                                <div class="d-flex w-100 mt-3">
+                                    <div class="position-relative pos-rel">
+                                        <div class="d_flex">
+                                            <i class="uil uil-mobile-android-alt"></i>
+                                            <p class="mb-0">+91</p>
+                                        </div>
+                                        <input type="tel" placeholder="Enter phone no"
+                                        class="form-control number_" (keyup)="validate()" formControlName="contact">
+                                    </div>
+                                    <button class="btn btn-primary"
+                                    *ngIf="contactInput" (click)="nextBlock()" [disabled]="next">Send OTP</button>
+                                </div>
+                            </form>
+                            <form class="w-100 mt-3" [formGroup]="signin" method="POST" *ngIf="enterOtp">
+                                <label for="">Please enter the OTP sent to {{contact_number}} <span
+                                        style="color: #ff6699; font-weight: 600; cursor: pointer;"
+                                        (click)="change()">change</span></label>
+                                <div class="d-flex w-100 mt-3 align-items-center">
+                                    <input type="tel" id="otp1" autocomplete="off" formControlName="otp1" maxlength="1" (keydown.backspace)="deleteOtp(1)" (input)="otplength(1)" class="otp_div form-control">
+                                    <input type="tel" id="otp2" autocomplete="off" formControlName="otp2" maxlength="1" (keydown.backspace)="deleteOtp(2)" (input)="otplength(2)" class="otp_div form-control">
+                                    <input type="tel" id="otp3" autocomplete="off" formControlName="otp3" maxlength="1" (keydown.backspace)="deleteOtp(3)" (input)="otplength(3)" class="otp_div form-control">
+                                    <input type="tel" id="otp4" autocomplete="off" formControlName="otp4" maxlength="1" (keydown.backspace)="deleteOtp(4)" (input)="otplength(4)" class="otp_div form-control">
+                                    <input type="tel" id="otp5" autocomplete="off" formControlName="otp5" maxlength="1" (keydown.backspace)="deleteOtp(5)" (input)="otplength(5)" class="otp_div form-control">
+                                    <input type="tel" id="otp6" autocomplete="off" formControlName="otp6" maxlength="1" (keydown.backspace)="deleteOtp(6)" (input)="otplength(6)" class="otp_div form-control">
+                                    <button class="btn btn-primary" (click)="submitIt()" [disabled]="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="steps-div">
+                        <div class="d-flex align-items-center">
+                            <div class="steps me-3">2</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="mb-0">Billing address</h3>
+                                <button class="btn btn-primary mt-3 ms-5" (click)="changeBilling()" *ngIf="currentStep == 3 || currentStep == 4">Change</button>
+                            </div>
+                        </div>
+                        <div class="w-100 pl mt-3" [ngStyle]="{'display': (billingComplete || currentStep != 2) ? 'none' : 'block'}">
+                            <div class="address-box" *ngIf="showAddress">
+                                <div class="add-address mb-5" (click)="openAddAddressForm()">
+                                    <p class="mb-0 d-flex">
+                                        <span class="plus me-2"><i class="uil uil-plus"></i></span>
+                                        Add new address
+                                    </p> 
+                                </div>
+                                <div class="row w-100 m-0" *ngIf="billingAddress?.length">
+                                    <div class="col-sm-6 ps-0 mb-3" *ngFor="let value of billingAddress" [ngClass]="{'default':value?.primary}" (click)="selectBilling(value.id)">
+                                        <div class="addresses_div " [class.someClass]="value.id === selectedBilling">
+                                            <p>{{value.address}},  <br> {{value.state}} {{value.city}} {{value.pincode}}</p>
+                                            <button class=" btn btn-outline-primary edit-btn"
+                                            (click)="editAddress(value)"
+                                                >Edit</button>
+                                            <button class=" btn btn-outline-primary edit-btn"
+                                            (click)="deleteAddress(value.id)">Delete</button>
+                                            <!-- <button class=" btn btn-outline-primary edit-btn"
+                                            (click)="updatePrimaryAddress(value.id)">{{value.primary?"Default":"Make as default"}}</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary mt-3" [disabled]="!billingShow()" (click)="continueBilling()">Continue</button>
+                            </div>
+                            <form class="needs-validation mt-3" *ngIf="showForm" [formGroup]="delivery" (ngSubmit)="onSubmitBilling()">
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="fullName"
+                                            formControlName="name" placeholder="Full name" required>
+                                            <label for="fullName" class="form-label">Full name</label>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" id="contact" formControlName="contact" placeholder="Contact" required>
+                                            <label for="lastName" class="form-label">Contact</label>
+                                            <div class="invalid-feedback"> Valid last name is required. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" formControlName="postcode" id="postcode" placeholder="Pin Code" required>
+                                            <label for="address" class="form-label">Pin Code</label>
+                                            <!-- <select class="form-select" id="area" formControlName="postcode"  required>
+                                                 <option *ngFor="let value of pincodes"  [value]="value?.pincode">{{value?.city.name}} - {{value?.pincode}}</option>
+                                                <option value="Subhash-Nagar">Subhash Nagar</option>
+                                                <option value="C-Scheme">C-Scheme</option>
+                                            </select> -->
+                                            <div class="invalid-feedback"> Please enter your pincode. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" formControlName="gst" id="gst" placeholder="GST Number">
+                                            <label for="address" class="form-label">GST No</label>
+                                            <!-- <select class="form-select" id="area" formControlName="postcode"  required>
+                                                 <option *ngFor="let value of pincodes"  [value]="value?.pincode">{{value?.city.name}} - {{value?.pincode}}</option>
+                                                <option value="Subhash-Nagar">Subhash Nagar</option>
+                                                <option value="C-Scheme">C-Scheme</option>
+                                            </select> -->
+                                            <div class="invalid-feedback"> Please enter your gst. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-select-wrapper">
+                                            <select id="country" class="form-select" formControlName="country" (change)="onCountryChange($event)">
+                                                <option value="">Select a country</option>
+                                                <option *ngFor="let country of countries" [value]="country.name"
+                                                [selected]="country.name == selectedCountry">{{ country.name }}</option>
+                                              </select>
+                                            <!-- <input type="text" class="form-control" formControlName="country" placeholder="country" />
+                                            <div class="invalid-feedback"> Please provide a valid country. </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-select-wrapper">
+                                            <select id="state" class="form-select" formControlName="state" (change)="onStateChange($event)">
+                                                <option value="">Select a state</option>
+                                                <option *ngFor="let state of states" [value]="state.name"
+                                                [selected]="state.name == selectedState">{{ state.name }}</option>
+                                              </select>
+                                            <!-- <input type="text" class="form-control" formControlName="state" placeholder="state" />
+                                            <div class="invalid-feedback"> Please provide a valid state. </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-select-wrapper">
+                                            <select id="city" class="form-select" formControlName="city">
+                                                <option value="">Select a city</option>
+                                                <option *ngFor="let city of cities" [value]="city.name"
+                                                [selected]="city.name == selectedCity">{{ city.name }}</option>
+                                              </select>
+                                            <!-- <input type="text" class="form-control" formControlName="city" placeholder="city" />
+                                            <div class="invalid-feedback"> Please provide a valid city. </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" formControlName="address" id="address" placeholder="1234 Main St" required>
+                                            <label for="address" class="form-label">Address</label>
+                                            <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" formControlName="locality" id="locality" placeholder="Apartment or suite">
+                                            <label for="address2" class="form-label">Street / Locality</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mt-7 mb-6">
+                                <!-- <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="same-address">
+                                    <label class="form-check-label" for="same-address">Shipping address is the same as
+                                        my billing
+                                        address</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="save-info">
+                                    <label class="form-check-label" for="save-info">Save this information for next
+                                        time</label>
+                                </div> -->
+                                <button class="btn btn-primary mt-3 me-3" type="submit">Save Address</button>
+                                <button class="btn btn-primary mt-3" (click)="closeAddress()">Back</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="steps-div">
+                        <div class="d-flex align-items-center">
+                            <div class="steps me-3">3</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">Shipping address</h3>
+                            <button class="btn btn-primary mt-3 ms-5" (click)="changeShipping()" *ngIf="currentStep == 4">Change</button>
+                            </div>
+                        </div>
+                        <div class="w-100 pl mt-3"  [ngStyle]="{'display': (shippingComplete || currentStep != 3) ? 'none' : 'block'}">
+                            <div class="new-shipping-box"  [ngStyle]="{'display': shippingAddress?.length > 0 ? 'none' : 'block'}">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" [(ngModel)]="sameShipping" id="same-address">
+                                    <label class="form-check-label" for="same-address">Shipping address is the same as
+                                        my billing
+                                        address</label>
+                                </div>
+                            </div>
+                            <div class="address-box" *ngIf="showAddress">
+                                <div class="add-address mb-5" (click)="openAddAddressForm()">
+                                    <p class="mb-0 d-flex">
+                                        <span class="plus me-2"><i class="uil uil-plus"></i></span>
+                                        Add new address
+                                    </p> 
+                                </div>
+                                <div class="row w-100 m-0" *ngIf="shippingAddress?.length">
+                                    <div class="col-sm-6 pe-0 mb-3" *ngFor="let value of shippingAddress" [ngClass]="{'default':value?.primary}" (click)="selectShipping(value.id)">
+                                        <div class="addresses_div" [class.someClass]="value.id === selectedShipping">
+                                            <p>{{value.address}},  <br> {{value.state}} {{value.city}} {{value.pincode}}</p>
+                                            <button class=" btn btn-outline-primary edit-btn"
+                                            (click)="editAddress(value)"
+                                                >Edit</button>
+                                            <button class=" btn btn-outline-primary edit-btn"
+                                            (click)="deleteAddress(value.id)">Delete</button>
+                                            <!-- <button class=" btn btn-outline-primary edit-btn"
+                                            (click)="updatePrimaryAddress(value.id)">{{value.primary?"Default":"Make as default"}}</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button *ngIf="!showForm || sameShipping" class="btn btn-primary mt-3" [disabled]="!shippingShow()" (click)="continueShipping()">Continue</button>
+                            <form class="needs-validation mt-3" *ngIf="showForm && !sameShipping" [formGroup]="delivery" (ngSubmit)="onSubmitShipping()">
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="fullName"
+                                            formControlName="name" placeholder="Full name" required>
+                                            <label for="fullName" class="form-label">Full name</label>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" id="contact" formControlName="contact" placeholder="Contact" required>
+                                            <label for="lastName" class="form-label">Contact</label>
+                                            <div class="invalid-feedback"> Valid last name is required. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" formControlName="postcode" id="postcode" placeholder="Pin Code" required>
+                                            <label for="address" class="form-label">Pin Code</label>
+                                            <!-- <select class="form-select" id="area" formControlName="postcode"  required>
+                                                 <option *ngFor="let value of pincodes"  [value]="value?.pincode">{{value?.city.name}} - {{value?.pincode}}</option>
+                                                <option value="Subhash-Nagar">Subhash Nagar</option>
+                                                <option value="C-Scheme">C-Scheme</option>
+                                            </select> -->
+                                            <div class="invalid-feedback"> Please enter your pincode. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-select-wrapper">
+                                            <select id="country" class="form-select" formControlName="country" (change)="onCountryChange($event)">
+                                                <option value="">Select a country</option>
+                                                <option *ngFor="let country of countries" [value]="country.name"
+                                                [selected]="country.name == selectedCountry">{{ country.name }}</option>
+                                              </select>
+                                            <!-- <input type="text" class="form-control" formControlName="country" placeholder="country" />
+                                            <div class="invalid-feedback"> Please provide a valid country. </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-select-wrapper">
+                                            <select id="state" class="form-select" formControlName="state" (change)="onStateChange($event)">
+                                                <option value="">Select a state</option>
+                                                <option *ngFor="let state of states" [value]="state.name"
+                                                [selected]="state.name == selectedState">{{ state.name }}</option>
+                                              </select>
+                                            <!-- <input type="text" class="form-control" formControlName="state" placeholder="state" />
+                                            <div class="invalid-feedback"> Please provide a valid state. </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-select-wrapper">
+                                            <select id="city" class="form-select" formControlName="city">
+                                                <option value="">Select a city</option>
+                                                <option *ngFor="let city of cities" [value]="city.name"
+                                                [selected]="city.name == selectedCity">{{ city.name }}</option>
+                                              </select>
+                                            <!-- <input type="text" class="form-control" formControlName="city" placeholder="city" />
+                                            <div class="invalid-feedback"> Please provide a valid city. </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" formControlName="address" id="address" placeholder="1234 Main St" required>
+                                            <label for="address" class="form-label">Address</label>
+                                            <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" formControlName="locality" id="locality" placeholder="Apartment or suite">
+                                            <label for="address2" class="form-label">Street / Locality</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mt-7 mb-6">
+                                <!-- <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="same-address">
+                                    <label class="form-check-label" for="same-address">Shipping address is the same as
+                                        my billing
+                                        address</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="save-info">
+                                    <label class="form-check-label" for="save-info">Save this information for next
+                                        time</label>
+                                </div> -->
+                                <button class="btn btn-primary mt-3 me-3" type="submit">Save Address</button>
+                                <button class="btn btn-primary mt-3" (click)="closeAddress()">Back</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="steps-div">
+                        <div class="d-flex align-items-center">
+                            <div class="steps me-3 steps-last-one">4</div>
+                            <h3 class="mb-0">Payment</h3>
+                        </div>
+                        <div class="w-100 pl"  [ngStyle]="{'display': (currentStep != 4) ? 'none' : 'block'}">
+                            <div class="mt-3 mb-6">
+                                <div class="form-check" *ngFor="let pay_methods of payment_methods">
+                                    <input id="credit" name="paymentMethod" type="radio" class="form-check-input"
+                                        required [value]="pay_methods.id" [(ngModel)]="payment_type"
+                                        [checked]="pay_methods.id == payment_type">
+                                    <label class="form-check-label" for="credit">{{pay_methods.title}}</label>
+                                </div>
+                                <!-- <div class="form-check">
+                                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input"
+                                        required>
+                                    <label class="form-check-label" for="debit">Debit card</label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="paypal" name="paymentMethod" type="radio" class="form-check-input"
+                                        required>
+                                    <label class="form-check-label" for="paypal">PayPal</label>
+                                </div> -->
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-xl-8">
+                                    <div class="row gy-3 gx-3">
+                                        <div class="col-md-12">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="cc-number"
+                                                    placeholder="Credit card number" required>
+                                                <label for="cc-number" class="form-label">Credit card number</label>
+                                                <div class="invalid-feedback"> Credit card number is required </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="cc-name"
+                                                    placeholder="Name on card" required>
+                                                <label for="cc-name" class="form-label">Name on card</label>
+                                                <div class="invalid-feedback"> Name on card is required </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="cc-expiration"
+                                                    placeholder="Expiration" required>
+                                                <label for="cc-expiration" class="form-label">Expiration</label>
+                                                <div class="invalid-feedback"> Expiration date required </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="cc-cvv" placeholder="CVV"
+                                                    required>
+                                                <label for="cc-cvv" class="form-label">CVV</label>
+                                                <div class="invalid-feedback"> Security code required </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                    <!-- <div class="alert alert-blue alert-icon mb-6" role="alert">
+                    <i class="uil uil-exclamation-circle"></i> Already have an account? <a href="#"
+                        data-bs-target="#modal-signin" data-bs-toggle="modal" data-bs-dismiss="modal"
+                        class="alert-link hover">Sign in</a> for faster checkout experience.
+                </div> -->
+                </div>
+                <!-- /column -->
+                <div class="col-lg-4">
+                    <h3 class="mb-4">Order Summary</h3>
+                    <div class="shopping-cart mb-7">
+                        <div *ngFor="let value of cart">
+                            <div class="shopping-cart-item d-flex justify-content-between mb-4">
+                                <div class="d-flex flex-row d-flex align-items-center">
+                                <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                    [src]="value?.details?.image" [alt]="value?.details?.title" /></a></figure>
+                                <div class="w-100 ms-4">
+                                    <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                            class="link-dark">{{value?.details?.title}}</a></h3>
+                                    <div class="small">Color: {{value?.details?.variation?.color?.title}}</div>
+                                    <!-- <div class="small">Size: 43</div> -->
+                                </div>
+                            </div>
+                            <div class="ms-2 d-flex align-items-center">
+                                <p class="price fs-sm"><span class="amount">₹{{value?.details?.variation?.discount_price?.toFixed(2)}}</span></p>
+                            </div>
+                            </div>
+                            <div class="mb-4" *ngIf="value?.details?.variation?.addon_product?.title">
+                                <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" class="FreeGift-freeGiftIcon">
+                                    <path d="M24 0H0v24L24 0Z" fill="#ff6699"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M3.825 3.625c0 .219.052.433.15.625h-1.35a.375.375 0 0 0-.375.375v2.25c0 .207.168.375.375.375H3v4.125c0 .207.168.375.375.375h7.25a.375.375 0 0 0 .375-.375V7.25h.375a.375.375 0 0 0 .375-.375v-2.25a.375.375 0 0 0-.375-.375h-1.351a1.378 1.378 0 0 0-.254-1.6 1.362 1.362 0 0 0-.97-.4c-.909 0-1.457.654-1.754 1.194L7 3.531a3.667 3.667 0 0 0-.046-.087C6.657 2.904 6.109 2.25 5.2 2.25a1.374 1.374 0 0 0-1.375 1.375ZM5.2 3a.624.624 0 1 0 0 1.25h1.298a3.34 3.34 0 0 0-.202-.444C6.043 3.346 5.691 3 5.2 3Zm2.302 1.25H8.8a.624.624 0 0 0 .44-1.07A.612.612 0 0 0 8.8 3c-.491 0-.843.346-1.096.806-.084.152-.15.307-.202.444ZM7.375 5v1.5H11V5H7.375Zm-.75 0v1.5H3V5h3.625Zm.75 6h2.875V7.25H7.375V11Zm-.75-3.75V11H3.75V7.25h2.875Z"
+                                        fill="#fff">
+                                    </path>
+                                </svg>
+                                <div class="FreeGift-freeGiftContainer">
+                                    <div style=" margin-left: 5px;" class="w-70">
+                                        <p class="mb-0" style="font-weight: 600;">Yay! You got an amazing free gift</p>
+                                        <span class="FreeGift-heading">
+                                            {{value?.details?.variation?.addon_product?.title}}
+                                          </span>
+                                    </div>
+                                    <div class="FreeGift-imageContainer"><img class="FreeGift-image"
+                                            src="{{value?.details?.variation?.addon_product?.image}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.shopping-cart-item -->
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-order"> 
+                            <tbody>
+                                <tr>
+                                    <td class="ps-0"><strong class="text-dark">Subtotal</strong></td>
+                                    <td class="pe-0 text-end">
+                                        <p class="price">₹{{subTotal?.toFixed(2)}}</p>
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <td class="ps-0"><strong class="text-dark">Discount (5%)</strong></td>
+                                    <td class="pe-0 text-end">
+                                        <p class="price text-red">-$6.8</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0"><strong class="text-dark">Shipping</strong></td>
+                                    <td class="pe-0 text-end">
+                                        <p class="price">$10</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0"><strong class="text-dark">Grand Total</strong></td>
+                                    <td class="pe-0 text-end">
+                                        <p class="price text-dark fw-bold">$152.79</p>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-primary rounded w-100 mt-4" (click)="createOrder()" [disabled]="!orderShow() || payment_processing">Place Order</button>
+                </div>
+                <!-- /column -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+    
+    <section class="wrapper bg-light" *ngIf="loader">
+        <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row align-items-center mb-5">
+                        <div class="col-sm-1">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 50,
+                                'width.px':50,
+                                'background-color': '#F9F7F6',
+                                'border-radius':'50%',
+                                'margin-bottom':'0'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-10">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':30,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-sm-1">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 50,
+                                'width.px':50,
+                                'background-color': '#F9F7F6',
+                                'border-radius':'50%',
+                                'margin-bottom':'0'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-10">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':30,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':70,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':40,
+                                'background-color': '#F9F7F6',
+                                'margin-right':'10px'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':40,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 50,
+                                'width.%':30,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-5">
+                        <div class="col-sm-1">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 50,
+                                'width.px':50,
+                                'background-color': '#F9F7F6',
+                                'border-radius':'50%',
+                                'margin-bottom':'0'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-10">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':30,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-5">
+                        <div class="col-sm-1">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 50,
+                                'width.px':50,
+                                'background-color': '#F9F7F6',
+                                'border-radius':'50%',
+                                'margin-bottom':'0'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-10">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':30,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 20,
+                        'width.%':40,
+                        'background-color': '#F9F7F6',
+                        'display':'block'}">
+                    </ngx-skeleton-loader>
+                    <div class="row align-items-center ">
+                        <div class="col-sm-4">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 100,
+                                'width.%':100,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-6">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 15,
+                                'width.%':80,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':30,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':20,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-2 p-0">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':100,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="row align-items-center ">
+                        <div class="col-sm-4">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 100,
+                                'width.%':100,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-6">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 15,
+                                'width.%':80,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':30,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':20,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-2 p-0">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':100,
+                                'background-color': '#F9F7F6',
+                                'display':'block'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3 mt-3">
+                        <div class="col-sm-6">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':40,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':40,
+                                'background-color': '#F9F7F6',
+                                'display':'block',
+                                'margin-left':'auto'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3 mt-3">
+                        <div class="col-sm-6">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':40,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 20,
+                                'width.%':40,
+                                'background-color': '#F9F7F6',
+                                'display':'block',
+                                'margin-left':'auto'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 50,
+                        'width.%':100,
+                        'background-color': '#F9F7F6',
+                        'display':'block',
+                        'margin-bottom':'20px'}">
+                    </ngx-skeleton-loader>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wrapper bg-light checkoutModal" *ngIf="checkoutDone && !loader">
+        <div class="container">
+            <div class="row">
+                <div class="lottie-success">
+                    <ng-lottie [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie>
+                </div>
+                <h1>Your Order has been Placed.</h1>
+            </div>
+        </div>
+    </section>
+    <!-- /section -->
+    <div class="modal fade" id="modal-signin" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h2 class="mb-3 text-start">Welcome Back</h2>
+                    <p class="lead mb-6 text-start">Fill your email and password to sign in.</p>
+                    <form class="text-start mb-3">
+                        <div class="form-floating mb-4">
+                            <input type="email" class="form-control" placeholder="Email" id="loginEmail">
+                            <label for="loginEmail">Email</label>
+                        </div>
+                        <div class="form-floating password-field mb-4">
+                            <input type="password" class="form-control" placeholder="Password" id="loginPassword">
+                            <span class="password-toggle"><i class="uil uil-eye"></i></span>
+                            <label for="loginPassword">Password</label>
+                        </div>
+                        <a class="btn btn-primary rounded-pill btn-login w-100 mb-2">Sign In</a>
+                    </form>
+                    <!-- /form -->
+                    <p class="mb-1"><a href="#" class="hover">Forgot Password?</a></p>
+                    <p class="mb-0">Don't have an account? <a href="#" data-bs-target="#modal-signup"
+                            data-bs-toggle="modal" data-bs-dismiss="modal" class="hover">Sign up</a></p>
+                    <div class="divider-icon my-4">or</div>
+                    <nav class="nav social justify-content-center text-center">
+                        <a href="#" class="btn btn-circle btn-sm btn-google"><i class="uil uil-google"></i></a>
+                        <a href="#" class="btn btn-circle btn-sm btn-facebook-f"><i class="uil uil-facebook-f"></i></a>
+                        <a href="#" class="btn btn-circle btn-sm btn-twitter"><i class="uil uil-twitter"></i></a>
+                    </nav>
+                    <!--/.social -->
+                </div>
+                <!--/.modal-content -->
+            </div>
+            <!--/.modal-body -->
+        </div>
+        <!--/.modal-dialog -->
+    </div>
+    <!--/.modal -->
+    <div class="modal fade" id="modal-signup" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h2 class="mb-3 text-start">Sign up to Sandbox</h2>
+                    <p class="lead mb-6 text-start">Registration takes less than a minute.</p>
+                    <form class="text-start mb-3">
+                        <div class="form-floating mb-4">
+                            <input type="text" class="form-control" placeholder="Name" id="loginName">
+                            <label for="loginName">Name</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="email" class="form-control" placeholder="Email" id="loginEmail">
+                            <label for="loginEmail">Email</label>
+                        </div>
+                        <div class="form-floating password-field mb-4">
+                            <input type="password" class="form-control" placeholder="Password" id="loginPassword">
+                            <span class="password-toggle"><i class="uil uil-eye"></i></span>
+                            <label for="loginPassword">Password</label>
+                        </div>
+                        <div class="form-floating password-field mb-4">
+                            <input type="password" class="form-control" placeholder="Confirm Password"
+                                id="loginPasswordConfirm">
+                            <span class="password-toggle"><i class="uil uil-eye"></i></span>
+                            <label for="loginPasswordConfirm">Confirm Password</label>
+                        </div>
+                        <a class="btn btn-primary rounded-pill btn-login w-100 mb-2">Sign Up</a>
+                    </form>
+                    <!-- /form -->
+                    <p class="mb-0">Already have an account? <a href="#" data-bs-target="#modal-signin"
+                            data-bs-toggle="modal" data-bs-dismiss="modal" class="hover">Sign in</a></p>
+                    <div class="divider-icon my-4">or</div>
+                    <nav class="nav social justify-content-center text-center">
+                        <a href="#" class="btn btn-circle btn-sm btn-google"><i class="uil uil-google"></i></a>
+                        <a href="#" class="btn btn-circle btn-sm btn-facebook-f"><i class="uil uil-facebook-f"></i></a>
+                        <a href="#" class="btn btn-circle btn-sm btn-twitter"><i class="uil uil-twitter"></i></a>
+                    </nav>
+                    <!--/.social -->
+                </div>
+                <!--/.modal-content -->
+            </div>
+            <!--/.modal-body -->
+        </div>
+        <!--/.modal-dialog -->
+    </div>
+</div>
+<app-footer></app-footer>

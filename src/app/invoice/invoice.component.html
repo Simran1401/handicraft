@@ -1,0 +1,251 @@
+<div class="content-part">
+    <div class="container py-10">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Invoice</h3>
+            <button class="btn btn-primary" (click)="printInvoice()">Download Invoice</button>
+        </div>
+        <div #invoice class="invoice-section">
+            <header class="invoice-nav">
+                <div class="table_1" style="margin-bottom: 20px;">
+                    <table style=" width: 100%;">
+                        <tr>
+                            <td>
+                                <img src="../../assets/img/OJEASE.jpeg" alt="" width="200px" height="100%">
+                            </td>
+                            <td class="p-0">
+                                <b class="text-dark">{{ company?.name }}</b>
+                                <br> {{ company?.billing_address }} <br> GSTNo: {{ company?.gst_no }}
+
+                            </td>
+
+                            <td style="text-align: right;display: flex;justify-content: right;align-items: center">
+                                <h1 class="mb-0">Tax Invoice</h1>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br>
+                <div style="border-top: 1px solid #000;">&nbsp;</div>
+
+                <table style="width: 100%;margin-bottom: 29.7px;">
+                    <tr>
+                        <td>
+                            <p class="mb-0" style="margin-bottom: 0">Invoice #&nbsp;&nbsp;<span style="color:#000">{{order[0]?.get_invoice_No}}</span></p>
+                        </td>
+                        <td style="text-align: left">
+                            <p class="mb-0" style="margin-bottom: 0">Date&nbsp;&nbsp;<span style="color:#000">{{ formatDateTime(order[0]?.get_invoice_date)}}</span></p>
+                        </td>
+
+                        <td style="text-align: right">
+                            <p class="mb-0" style="margin-bottom: 0">Place Of Supply : &nbsp;&nbsp;<span style="color:#000">{{order[0]?.place_of_supply_state}}({{order[0]?.place_of_supply_gst_code}})</span></p>
+                        </td>
+                    </tr>
+                </table>
+                <div style="border-top:1px solid #eee">&nbsp;</div>
+            </header>
+            <div class="invoice-1-sec">
+                <div class="table-responsive">
+                    <table class="table mb-0" style="border:none;">
+                        <thead>
+                            <tr>
+                                <td style="width: 50%">
+                                    <p class="purple mb-2">BILLING ADDRESS</p>
+                                </td>
+                                <td style="width: 50%; text-align: left">
+                                    <p class="purple mb-2">SHIPPING ADDRESS</p>
+                                </td>
+                            </tr>
+                        </thead>
+
+                        <tr>
+                            <td>
+                                <p class="p-0 mb-0">
+                                    {{order[0]?.billing_address?.full_name}}
+                                   </p>
+                            </td>
+                            <td style=" text-align: left">
+                                <p class="p-0 mb-0">
+                                    {{order[0]?.shipping_address?.full_name}}
+                                   </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                
+                                <p class="p-0 mb-0">{{order[0].billing_address.address}}</p>
+
+                                <p class="p-0 mb-0">
+                                    {{order[0]?.billing_address?.locality}}, {{order[0]?.billing_address?.city}}, {{order[0]?.billing_address?.state}}, {{order[0]?.billing_address?.country}} ,{{order[0]?.billing_address?.pincode}}
+                                </p>
+                                
+                                <p class="p-0 mb-0">
+                                    Mobile No. {{order[0]?.billing_address?.mobile}}
+                                   </p>
+                                   <p *ngIf="order[0]?.billing_address?.gst_no" class="mb-0">GST No. : {{order[0]?.billing_address?.gst_no}}
+                                </p>
+                            </td>
+                            <td style=" text-align: left">
+                                <p class="p-0 mb-0">{{order[0].shipping_address.address}}</p>
+                                
+                                <p class="p-0 mb-0">
+                                    {{order[0]?.shipping_address?.locality}} {{order[0]?.shipping_address?.city}} {{order[0]?.shipping_address?.state}} {{order[0]?.shipping_address?.country}} {{order[0]?.billing_address?.pincode}}
+                                </p>
+                                <p class="p-0 mb-0">
+                                    Mobile No. {{order[0]?.shipping_address?.mobile}}
+                                   </p>
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </div>
+            </div>
+            <div class="invoice-2-sec">
+                <div class="table-responsive">
+                    <table class="table mb-0" style="border-collapse: collapse;text-align: center; border: none;">
+
+                        <thead>
+                            <tr style="background: #f8f8f8;">
+                                <th style="font-size: 18px; width: 50%;text-align: left;padding-left: 10px;">Title </th>
+                                <th style="font-size: 18px;">Mrp</th>
+                                <th style="font-size: 18px;">Discount</th>
+                                <th style="font-size: 18px;">Qty</th>
+                                <th style="font-size: 18px;">Price</th>
+                                <th style="font-size: 18px;">Amount</th>
+                            </tr>
+                        </thead>
+
+                        <tr *ngFor="let item of order[0]?.products;let pi=index">
+                            <td style="text-align: left; padding-left: 10px;">
+                                <p style="font-size: 17px; padding-left: 0;">{{item.product.title}}</p>
+                            </td>
+                            <td>
+                                <p style="font-size: 17px;">{{item.mrp}}</p>
+                            </td>
+                            <td>
+                                <p style="font-size: 17px;">{{item.get_amount_saved}}</p>
+                            </td>
+                            <td>
+                                <p style="font-size: 17px;">{{item.quantity}}</p>
+                            </td>
+                            <td>
+                                <p style="font-size: 17px;">{{item.discount_price}}</p>
+                            </td>
+                            <td>
+                                <p style="font-size: 17px;">{{item.get_final_price}}</p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            <div class="invoice-3-sec" style="width: 100%;">
+                <div class="table-responsive" style="margin-left: auto; width: 60%;">
+                    <table class="table table_amt" style="border:none; width: 60%; margin-left: auto;">
+
+                        <tr style="text-align: right;">
+                            <td>
+                                <p class="mb-0 p-0" style="font-size: 16px;">Saved Amount : </p>
+                            </td>
+                            <td class="text-end" style="width: 30%;">
+                                <p class="mb-0 p-0" style="font-size: 16px;text-align: right;">
+                                    {{order[0]?.get_total_amount_saved}}</p>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="!order[0]?.Check_SGSTCGST" style="text-align: right;">
+                            <td>
+                                <p class="mb-0 p-0" style="font-size: 16px;">GST(18%) : </p>
+                            </td>
+                            <td style="text-align: right;">
+                                <p class="mb-0 p-0" style="font-size: 16px;text-align: right;">
+                                    {{order[0]?.get_gst}}</p>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="order.Check_SGSTCGST" style="text-align: right;">
+                            <td>
+                                <p class="mb-0 p-0" style="font-size: 16px;">CGST(9%) :</p>
+                            </td>
+                            <td style="text-align: right;">
+                                <p class="mb-0 p-0" style="font-size: 16px;text-align: right;">
+                                    {{ order[0]?.get_scgst}}</p>
+                            </td>
+
+                        </tr>
+
+                        <tr *ngIf="order.Check_SGSTCGST" style="text-align: right;">
+
+                            <td>
+                                <p class="mb-0 p-0" style="font-size: 16px;">SGST(9%) : </p>
+                            </td>
+                            <td style="text-align: right;">
+                                <p class="mb-0 p-0" style="font-size: 16px;text-align: right;">
+                                    {{ order[0].get_scgst}}</p>
+                            </td>
+                        </tr>
+
+                        <tr style="text-align: right;">
+
+                            <td>
+                                <p class="mb-0 p-0" style="font-size: 16px;font-weight:500;">Amount : </p>
+                            </td>
+                            <td style="text-align: right;">
+                                <p class="mb-0 p-0" style="font-size: 16px;font-weight:500;text-align: right;">
+                                    {{order[0].total_amount}}</p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                <div style="border-top: 1px solid #eee;">&nbsp;</div>
+                <div class="table-responsive">
+                    <table style="border: none;" class="mb-0">
+                        <tr>
+                            <td style="padding-right: 10px !important; font-size: 17px;"><b>Terms & Conditions</b></td>
+                        </tr>
+                        <tr>
+                            <td [innerHTML]="company.term_and_condition"></td>
+
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+
+            <table class="table" style="text-align: center; margin-left: auto; margin: auto; margin: 50px 0;">
+                <tr>
+                    <td style="width: 70%;padding:0;"> &nbsp;</td>
+                    <td style="width: 30%;padding:0;">
+                        <p style="border-top: 1px solid #000; padding-left: 10px;padding-top: 10px;padding-bottom: 0;  margin-bottom: 0;border-left: 1px solid #000;border-right: 1px solid #000;color: #000;">
+                            OJ Ease It Solutions</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 70%;padding:0;"> &nbsp;</td>
+                    <td style="width: 30%;padding:0;">
+                        <div style=" margin-bottom: 0; padding-left: 10px;border-left: 1px solid #000;padding-bottom: 0;border-right: 1px solid #000;">
+                            <img src="../../assets/img/OJEASE_Signature.png" height="50px" width="200px" alt="">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 70%;padding:0;"> &nbsp;</td>
+                    <td style="width: 30%;padding:0;">
+                        <h5 style="border-bottom: 1px solid #000;padding-top: 0.9rem; padding-left: 10px; padding-bottom: 10px; margin-top: 0;border-left: 1px solid #000;border-right: 1px solid #000;">
+                            Authorized Signature</h5>
+                    </td>
+
+                </tr>
+
+            </table>
+            <h5 style="text-align: center; border-top: 1px solid #eee;margin-top: 50px; padding-top: 20px;">
+                OJ-Ease IT Solutions - Proudly coded by <a href="http://gftpl.in">GFTPL</a></h5>
+
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="loading">Loading...</div>

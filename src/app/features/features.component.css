@@ -1,0 +1,11 @@
+.feature-img{
+    width: 35%;
+    height: 46px;
+    margin-right: 10px;
+}
+
+.feature-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

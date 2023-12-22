@@ -1,0 +1,111 @@
+<app-header></app-header>
+<div class="content-part">
+    <section class="wrapper bg-light" *ngIf="!loading && faqs?.length">
+        <div class="container py-10 ">
+            <h2 class="display-4 mb-3 text-center">Got Questions? We Have Answers!</h2>
+            <p class="lead text-center mb-10 px-md-16 px-lg-0">Find answers to common queries about our handcrafted treasures
+                and services in our FAQ section</p>
+            <div class="row">
+                <!--/column -->
+                <div class="col-lg-12">
+                    <div class="accordion accordion-wrapper" id="accordionExample">
+                        <!-- Loop through the first four FAQs -->
+                        <div class="card accordion-item" *ngFor="let question of faqs">
+                            <div class="card-header" [attr.id]="'heading' + question.id">
+                                <button class="collapsed" data-bs-toggle="collapse"
+                                    [attr.data-bs-target]="'#collapse' + question.id"
+                                    [attr.aria-expanded]="false"
+                                    [attr.aria-controls]="'collapse' + question.id">{{ question.question
+                                    }}</button>
+                            </div>
+                            <div [id]="'collapse' + question.id" class="accordion-collapse collapse"
+                                [attr.aria-labelledby]="'heading' + question.id"
+                                data-bs-parent="#accordionExample">
+                                <div class="card-body">
+                                    <p>{{ question.ans }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.accordion-wrapper -->
+                </div>
+                <!--/column -->
+            </div>
+            <!--/.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+    <section class="wrapper bg-light" *ngIf="loading">
+        <div class="container py-10 ">
+            <h2 class="display-4 mb-3 text-center">Pricing FAQ</h2>
+            <p class="lead text-center mb-10 px-md-16 px-lg-0">If you don't see an answer to your question, you can send
+                us an email from our contact form.</p>
+            <div class="row">
+                <!--/column -->
+                <div class="col-lg-12">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 100,
+                        'width.%':100,
+                        'margin-bottom':'20px',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <!--/column -->
+            </div>
+            <div class="row">
+                <!--/column -->
+                <div class="col-lg-12">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 100,
+                        'width.%':100,
+                        'margin-bottom':'20px',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <!--/column -->
+            </div>
+            <div class="row">
+                <!--/column -->
+                <div class="col-lg-12">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 100,
+                        'width.%':100,
+                        'margin-bottom':'20px',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <!--/column -->
+            </div>
+            <div class="row">
+                <!--/column -->
+                <div class="col-lg-12">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 100,
+                        'width.%':100,
+                        'margin-bottom':'20px',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <!--/column -->
+            </div>
+            <div class="row">
+                <!--/column -->
+                <div class="col-lg-12">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 100,
+                        'width.%':100,
+                        'margin-bottom':'20px',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+                <!--/column -->
+            </div>
+            <!--/.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+    <!-- /section -->
+</div>
+<app-footer></app-footer>

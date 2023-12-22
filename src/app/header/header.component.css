@@ -1,0 +1,263 @@
+.logo-light, .logo-dark {
+    width: 80%;
+    height: 90px;
+    object-fit: contain;
+}
+
+.nav-link {
+    color: #000;
+}
+
+.navbar-dark {
+    background-color: #fff;
+}
+
+.hamburger {
+    color: #000 !important;
+}
+
+.navbar-expand-lg .offcanvas {
+    width: 100% !important;
+}
+
+.call {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1
+}
+
+.uil-phone {
+    font-size: 25px;
+    margin-right: 5px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.call {
+    font-size: 11px;
+}
+
+.phone-no {
+    font-size: 15px;
+}
+
+
+.navbar-expand-lg.transparent:not(.fixed){
+    padding-bottom: .3rem;
+}
+
+.sign-in-btn i {
+    font-size: 1.1rem;
+    color: #000;
+    cursor: pointer;
+}
+
+.navbar-brand {
+    width: 30%;
+}
+
+.navbar-other {
+    width: 50%;
+}
+
+.sign-in-btn {
+    display: flex;
+    align-items: center;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.badge {
+    position: absolute;
+    top: -15%;
+    left: 135%;
+    transform: translate(-100%, 0);
+    /* display: block !important; */
+}
+
+.navbar {
+    box-shadow: 0 0 1.25rem rgba(30, 34, 40, .06);
+}
+
+.navbar .navbar-other .navbar-nav>.nav-item+.nav-item {
+    margin-left: 2rem;
+}
+
+.d-flex-1 {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.d-flex-1 i {
+    height: 26px;
+    width: 26px;
+    display: flex;
+    text-align: center;
+    background: #ff6699;
+    border-radius: 50%;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+}
+
+.d-flex-1 i:not(:last-child), .d-flex-1 a:not(:last-child) {
+    margin-right: 10px;
+}
+
+#mob-show-search {
+    display: none;
+}
+
+.d_flex {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    transform: translate(0, -50%);
+}
+
+#contact {
+    padding-top: 0.2rem;
+    padding-left: 55px;
+}
+
+.my-account {
+    background: transparent;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.mob-acc {
+    display: none;
+}
+
+/* .modal .btn-close {
+    position: absolute;
+    top: 0.7rem;
+    right: 1.5rem !important;
+} */
+
+.modal .btn-close {
+    position: absolute;
+    top: 0.7rem;
+    right: 1rem !important;
+    width: auto;
+    height: auto;
+}
+
+.fixed-lower-nav {
+    position: fixed !important;
+    top: 0;
+}
+
+@media (max-width:1200px) {
+    .navbar-other {
+        width: 65%;
+    }
+
+    .sign-in-btn {
+        font-size: 15px;
+    }
+
+    .navbar-other .nav-link {
+        font-size: 15px;
+    }
+
+    #search-form {
+        padding: 0.4rem 1rem;
+    }
+}
+
+@media (max-width:992px) {
+    .navbar-brand {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .my-account .uil-angle-down {
+        display: none;
+    }
+
+    .navbar-other {
+        width: 45%;
+    }
+
+    #mob-show-search {
+        display: block;
+    }
+
+    #mob-hidden-search {
+        display: none;
+    }
+
+    .navbar {
+        padding-bottom: 20px;
+    }
+
+    .desktop-acc {
+        display: none;
+    }
+
+    .mob-acc {
+        display: block;
+    }
+
+    .mob-dropdown-menu{
+        display: block;
+        position: absolute;
+        left: -35%;
+        transform: translate(-50%);
+    }
+}
+
+@media (max-width:765px) {
+    .d-flex-1 {
+        margin-left: 0;
+    }
+
+    .logo-dark, .logo-light {
+        width: auto;
+        height: 61px;
+    }
+
+    .navbar-brand {
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+        width: 55% !important;
+    }
+
+    .navbar .navbar-other .navbar-nav>.nav-item+.nav-item {
+        margin-left: 0.5rem;
+    }
+
+    .call {
+        font-size: 11px;
+    }
+
+    .phone-no {
+        font-size: 13px;
+    }
+
+    .navbar-other i {
+        font-size: 20px !important;
+    }
+
+    .navbar-other span {
+        display: none;
+    }
+
+    #modal-signin .modal-body {
+        padding: 30px;
+    }
+    .badge-cart {
+        display: flex !important;
+    }
+}

@@ -1,0 +1,210 @@
+<div class="bg-soft-primary pad-box mb-3">
+    <h3 class="mb-0">Your Address</h3>
+</div>
+
+<div class="bg-soft-primary pad-box">
+
+
+    <form class="needs-validation mt-3" *ngIf="showForm && !loading" [formGroup]="delivery" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="fullName" formControlName="name" placeholder="Full name" required>
+                    <label for="fullName" class="form-label">Full name</label>
+                    <div class="invalid-feedback"> Valid first name is required. </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-floating">
+                    <input type="number" class="form-control" id="contact" formControlName="contact" placeholder="Contact" required>
+                    <label for="lastName" class="form-label">Contact</label>
+                    <div class="invalid-feedback"> Valid last name is required. </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-floating">
+                    <input type="number" class="form-control" formControlName="postcode" id="postcode" placeholder="Pin Code" required>
+                    <label for="address" class="form-label">Pin Code</label>
+                    <!-- <select class="form-select" id="area" formControlName="postcode"  required>
+                         <option *ngFor="let value of pincodes"  [value]="value?.pincode">{{value?.city.name}} - {{value?.pincode}}</option>
+                        <option value="Subhash-Nagar">Subhash Nagar</option>
+                        <option value="C-Scheme">C-Scheme</option>
+                    </select> -->
+                    <div class="invalid-feedback"> Please enter your pincode. </div>
+                </div>
+            </div>
+            <div class="col-sm-6" *ngIf="allowGST">
+                <div class="form-floating">
+                    <input type="text" class="form-control" formControlName="gst" id="gst" placeholder="GST Number">
+                    <label for="address" class="form-label">GST No</label>
+                    <!-- <select class="form-select" id="area" formControlName="postcode"  required>
+                         <option *ngFor="let value of pincodes"  [value]="value?.pincode">{{value?.city.name}} - {{value?.pincode}}</option>
+                        <option value="Subhash-Nagar">Subhash Nagar</option>
+                        <option value="C-Scheme">C-Scheme</option>
+                    </select> -->
+                    <div class="invalid-feedback"> Please enter your gst. </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-select-wrapper">
+                    <select id="country" class="form-select" formControlName="country" (change)="onCountryChange($event)">
+                                                <option value="">Select a country</option>
+                                                <option *ngFor="let country of countries" value="{{country.name}}"
+                                                [selected]="country.name == selectedCountry">{{ country.name }}</option>
+                                              </select>
+                    <!-- <input type="text" class="form-control" formControlName="country" placeholder="country" />
+                    <div class="invalid-feedback"> Please provide a valid country. </div> -->
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-select-wrapper">
+                    <select id="state" class="form-select" formControlName="state" (change)="onStateChange($event)">
+                                                <option value="">Select a state</option>
+                                                <option *ngFor="let state of states" [value]="state.name"
+                                                [selected]="state.name == selectedState">{{ state.name }}</option>
+                                              </select>
+                    <!-- <input type="text" class="form-control" formControlName="state" placeholder="state" />
+                    <div class="invalid-feedback"> Please provide a valid state. </div> -->
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-select-wrapper">
+                    <select id="city" class="form-select" formControlName="city">
+                                                <option value="">Select a city</option>
+                                                <option *ngFor="let city of cities" [value]="city.name"
+                                                [selected]="city.name == selectedCity">{{ city.name }}</option>
+                                              </select>
+                    <!-- <input type="text" class="form-control" formControlName="city" placeholder="city" />
+                    <div class="invalid-feedback"> Please provide a valid city. </div> -->
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-floating">
+                    <input type="text" class="form-control" formControlName="address" id="address" placeholder="1234 Main St" required>
+                    <label for="address" class="form-label">Address</label>
+                    <div class="invalid-feedback"> Please enter your shipping address. </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-floating">
+                    <input type="text" class="form-control" formControlName="locality" id="locality" placeholder="Apartment or suite">
+                    <label for="address2" class="form-label">Street / Locality</label>
+                </div>
+            </div>
+
+        </div>
+        <hr class="mt-7 mb-6">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="same-address">
+            <label class="form-check-label" for="same-address">Shipping address is the same as
+                my billing
+                address</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="save-info">
+            <label class="form-check-label" for="save-info">Save this information for next
+                time</label>
+        </div>
+        <button class="btn btn-primary mt-3 me-3" type="submit">Save Address</button>
+        <button class="btn btn-primary mt-3" (click)="closeAddress()">Back</button>
+    </form>
+
+    <ul class="nav nav-tabs nav-tabs-basic" *ngIf="showAddress">
+        <li class="nav-item"> <a class="btn btn-outline-primary active me-2" data-bs-toggle="tab" href="#tab3-1">Shipping</a> </li>
+        <li class="nav-item"> <a class="btn btn-outline-primary " data-bs-toggle="tab" href="#tab3-2">Billing</a> </li>
+    </ul>
+    <div class="tab-content" style="margin-top: 5rem;" *ngIf="showAddress">
+        <div class="tab-pane fade show active" id="tab3-1">
+
+            <section class="wrapper bg-light" *ngIf="!loading">
+                <div class="container">
+                    <div class="row gx-md-8 gx-xl-12 gy-12 p-3">
+                        <div class="col-sm-6 mt-0 mb-3">
+                            <div class="add-address " (click)="openAddAddressForm('Shipping')">
+                                <p class="mb-0 d-flex">
+                                    <span class="plus me-2"><i class="uil uil-plus"></i></span> Add new address
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-0 mb-3" *ngFor="let value of shippingAddress" [ngClass]="{'default':value?.primary}">
+                            <div class="addresses_div">
+                                <p>{{value.address}}, <br> {{value.state}} {{value.city}} {{value.pincode}}</p>
+                                <button class=" btn btn-outline-primary edit-btn" (click)="editAddress(value, 'Shipping')">Edit</button>
+                                <button class=" btn btn-outline-primary edit-btn" (click)="deleteAddress(value.id, 'Shipping')">Delete</button>
+                                <!-- <button class=" btn btn-outline-primary edit-btn"
+                                (click)="updatePrimaryAddress(value.id, 'Shipping')">{{value.primary?"Default":"Make as default"}}</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="wrapper bg-light" *ngIf="loading">
+                <div class="container">
+                    <div class="row gx-md-8 gx-xl-12 gy-12 p-3">
+                        <div class="col-sm-6 mt-0 mb-3">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':100,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-6 mt-0 mb-3">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':100,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <div class="tab-pane fade" id="tab3-2">
+            <section class="wrapper bg-light" *ngIf="!loading">
+                <div class="container ">
+                    <div class="row gx-md-8 gx-xl-12 gy-12 p-3">
+                        <div class="col-sm-6 mt-0 mb-3">
+                            <div class="add-address mb-5" (click)="openAddAddressForm('Billing')">
+                                <p class="mb-0 d-flex">
+                                    <span class="plus me-2"><i class="uil uil-plus"></i></span> Add new address
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-0 mb-3" *ngFor="let value of billingAddress" [ngClass]="{'default':value?.primary}">
+                            <div class="addresses_div">
+                                <p>{{value.address}}, <br> {{value.state}} {{value.city}} {{value.pincode}}</p>
+                                <button class=" btn btn-outline-primary edit-btn" (click)="editAddress(value, 'Billing')">Edit</button>
+                                <button class=" btn btn-outline-primary edit-btn" (click)="deleteAddress(value.id, 'Billing')">Delete</button>
+                                <!-- <button class=" btn btn-outline-primary edit-btn"
+                                (click)="updatePrimaryAddress(value.id, 'Billing')">{{value.primary?"Default":"Make as default"}}</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="wrapper bg-light" *ngIf="loading">
+                <div class="container">
+                    <div class="row gx-md-8 gx-xl-12 gy-12 p-3">
+                        <div class="col-sm-6 mt-0 mb-3">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':100,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                        <div class="col-sm-6 mt-0 mb-3">
+                            <ngx-skeleton-loader count="1" [theme]="{
+                                'height.px': 130,
+                                'width.%':100,
+                                'background-color': '#F9F7F6'}">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

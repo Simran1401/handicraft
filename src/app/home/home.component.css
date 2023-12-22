@@ -1,0 +1,211 @@
+.avatar {
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    width: auto;
+}
+
+.category-swiper .swiper img {
+    width: 100%;
+    height: 260px !important;
+}
+
+.category-swiper .swiper-slide{
+    width: 90% !important;
+    padding: 0 0.5rem;
+}
+
+.scroll_bar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.scroll_bar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scroll_bar::-webkit-scrollbar-thumb {
+    background: #adadad59;
+}
+
+.scroll_bar::-webkit-scrollbar-thumb:hover {
+    background: #adadad59;
+}
+
+.link-dark:hover .post-title{
+    color: #ff6699;
+}
+
+.bg-img{
+    background-size: cover;
+    background-position: center center;
+    height: 550px;
+}
+
+.bg-img::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30,34,40,.5);
+}
+
+.position-unset{
+    position: unset !important;
+}
+
+/* checking ssh */
+.project.item figure img {
+    height: 300px !important;
+    object-fit: contain;
+    box-shadow: 2px 2px 4px 5px #eee;
+    padding: 10px;
+}
+
+.item-like{
+    border: none;
+}
+
+.h-170{
+    height: 170px;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-img{
+    width: 35%;
+    height: 46px;
+    margin-right: 10px;
+}
+
+.feature-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.progress2 {
+    position: relative;
+    margin: 4px;
+    float: left;
+    text-align: center;
+}
+
+.barOverflow {
+    /* Wraps the rotating .bar */
+    position: relative;
+    overflow: hidden;
+    /* Comment this line to understand the trick */
+    width: 90px;
+    height: 45px;
+    /* Half circle (overflow) */
+    margin-bottom: -14px;
+    /* bring the numbers up */
+}
+
+.bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90px;
+    height: 90px;
+    /* full circle! */
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 5px solid #eee;
+    /* half gray, */
+    border-bottom-color: #0bf;
+    /* half azure */
+    border-right-color: #0bf;
+}
+
+.percentNumber{
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%,-50%);
+}
+
+.limitText{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    margin-bottom: 0;
+    line-clamp: 15;
+    -webkit-box-orient: vertical;
+}
+
+.pad-20{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.icon-svg.icon-svg-md {
+    width: 4rem;
+    height: 4rem;
+}
+
+@media (max-width:1280px) {
+    .percentNumber{
+        top: 55%;
+    }
+}
+
+@media (max-width:1024px) {
+    .percentNumber{
+        top: 40% ;
+    }
+
+    .width_50 round-progress{
+        height: 90px !important;
+    }
+}
+
+@media (max-width:992px) {
+    .category-swiper .swiper img{
+        height: 250px !important;
+    }
+
+    .percentNumber{
+        top: 55%;
+    }
+
+    .width_50 round-progress{
+        height: 110px !important;
+    }
+}
+
+@media (max-width:765px) {
+    .category-swiper .swiper-slide{
+        width: 100% !important;
+    }
+
+    .category-swiper .swiper img {
+        height: 200px !important;
+    }
+
+    .width_50{
+        width: 50%;
+    }
+
+    .width_50 round-progress{
+        height: 80px !important;
+    }
+
+    .percentNumber{
+        top: 45%;
+    }
+}
+
+.black-border {
+    border: 1px solid black;
+}
+.red-border {
+    border: 1px solid red;
+}

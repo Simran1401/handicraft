@@ -1,0 +1,52 @@
+<h2 class="mb-3 text-start">Welcome Back</h2>
+<p class="lead mb-6 text-start" *ngIf="contactInput">Fill your phone number to sign in.</p>
+<p class="lead mb-6 text-start" *ngIf="!contactInput">Please enter the OTP sent to<br>{{ contact_number }} <span
+        class="change" (click)="change()"> change</span></p>
+<form class="text-start mb-3" [formGroup]="signin" *ngIf="!done" method="POST">
+    <div class="form-floating mb-4 position-relative" *ngIf="contactInput">
+        <div class="d_flex">
+            <i class="uil uil-mobile-android-alt"></i>
+            <p class="mb-0">+91</p>
+        </div>
+        <input class="form-control" placeholder="phone number" (keyup)="validate()" formControlName="contact" type="tel"
+            id="contact">
+    </div>
+    <div class="form-floating mb-4" *ngIf="!contactInput">
+        <div class="otp-label">
+            <input type="tel" class="otps form-control" id="otp1" [ngClass]="{'err': err$}" maxlength="1"
+                formControlName="otp1" autocomplete="off" (keydown.backspace)="deleteOtp(1)" (input)="otplength(1)">
+            <input type="tel" class="otps form-control" id="otp2" [ngClass]="{'err': err$}" maxlength="1"
+                formControlName="otp2" autocomplete="off" (keydown.backspace)="deleteOtp(2)" (input)="otplength(2)">
+            <input type="tel" class="otps form-control" id="otp3" [ngClass]="{'err': err$}" maxlength="1"
+                formControlName="otp3" autocomplete="off" (keydown.backspace)="deleteOtp(3)" (input)="otplength(3)"><br
+                class="br">
+            <input type="tel" class="otps form-control" id="otp4" [ngClass]="{'err': err$}" maxlength="1"
+                formControlName="otp4" autocomplete="off" (keydown.backspace)="deleteOtp(4)" (input)="otplength(4)">
+            <input type="tel" class="otps form-control" id="otp5" [ngClass]="{'err': err$}" maxlength="1"
+                formControlName="otp5" autocomplete="off" (keydown.backspace)="deleteOtp(5)" (input)="otplength(5)">
+            <input type="tel" class="otps form-control" id="otp6" [ngClass]="{'err': err$}" maxlength="1"
+                formControlName="otp6" autocomplete="off" (keydown.backspace)="deleteOtp(6)" (input)="otplength(6)">
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="submit btn btn-primary" *ngIf="contactInput" (click)="nextBlock()"
+            [disabled]="next">Next</button>
+    </div>
+    <div class="text-center">
+        <button class="submit m-submit btn btn-primary" *ngIf="!contactInput" (click)="submitIt()"
+            [disabled]="submit">Submit</button>
+    </div>
+    <div *ngIf="!contactInput" class="resend">
+        <span class="teal" *ngIf="timer===0" (click)="resend()">Resend</span>
+        <span class="disabled" *ngIf="timer>0">Resend Code (in {{timer}} secs)</span>
+    </div>
+    <div class="error"><span class="text-danger">{{errorMsg}}</span></div>
+    <!-- <a class="btn btn-primary rounded-pill btn-login w-100 mb-2" 
+data-bs-target="#modal-otp" data-bs-toggle="modal" 
+data-bs-dismiss="modal">Send OTP</a> -->
+</form>
+<!-- <div class="side-success" >
+    <i class="uil uil-check-circle side-left2"></i>
+    <div>{{successMessage}}</div>
+    <i class="uil uil-times side-right2"></i>
+</div> -->

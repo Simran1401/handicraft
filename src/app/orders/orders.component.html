@@ -1,0 +1,636 @@
+<div class="bg-soft-primary pad-box mb-3">
+    <h3 class="mb-0">Orders & Returns</h3>
+</div>
+
+<div class="bg-soft-primary pad-box "  *ngIf="!error;else error_component">
+<div *ngIf="!loader">
+    <ul class="nav nav-tabs nav-tabs-basic">
+        <li class="nav-item"> <a class="btn btn-outline-primary active me-2" data-bs-toggle="tab"
+                href="#tab3-1">Orders</a> </li>
+        <li class="nav-item"> <a class="btn btn-outline-primary " data-bs-toggle="tab" href="#tab3-2">Returns</a> </li>
+    </ul>
+    <div class="tab-content ">
+        <div class="tab-pane fade show active mt-15" id="tab3-1">
+
+            <section class="wrapper">
+                <div class="container">
+                    <div class="row gx-md-8 gx-xl-12 gy-12" *ngIf="orders?.length > 0">
+                        <div class="col-sm-12 mt-5 bg-light pt-3 pb-3" *ngFor="let value of orders; let i=index">
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <div>
+                                    <h4 class="mb-0">{{value?.order_id}}</h4>
+                                    <p class="mb-0">{{value?.get_placed_at}}</p>
+                                </div>
+                                <h4 class="mb-0" [ngClass]="{'order-cancel': value.status == 'Cancelled', 'order-delivered': value.status == 'Delivered'}">{{value?.status}}</h4>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <h4 class="mb-0">{{value?.payment_method?.title}}</h4>
+                                <div class="order-detail-return">
+                                    <button *ngIf="value?.status == 'Delivered' && value?.get_invoice_No" class="order-details me-2" type="button" (click)="navigateToInvoice('order', value.id)">Invoice</button>
+                                <button class="order-details me-2" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal-details" (click)="openOrder(i)">Order Details</button>
+                                    <button *ngIf="value?.status == 'Delivered'" class="order-details" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal-return" (click)="openOrder(i)">Return</button>
+                                    <button *ngIf="value?.status == 'New'" class="order-details" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal-cancel" (click)="cancelOrder(i)">Cancel</button>
+                            </div>
+                                </div>
+                            <div *ngFor="let item of value.products;let pi=index" class="d_flex justify-content-between align-items-center mb-5">
+                                <div class="option text-start d-flex flex-row align-items-center ps-0 ">
+                                    <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                        *ngIf="item['product']['image']" 
+                                        [alt]="item['product']['title']" 
+                                        [src]="item['product']['image']"
+                                     /></a>
+                                    </figure>
+                                    <div class="w-100 ms-4">
+                                        <h3 class="post-title h6 lh-xs mb-1"><a [href]="'/p/'+item['product']['id']"
+                                                class="link-dark">{{item?.product?.title}}</a></h3>
+                                        <div class="small">Color: Black</div>
+                                        <div class="small">Size: 43</div>
+                                        <p class="price"><del><span class="amount">₹{{item?.mrp?.toFixed(2)}}</span></del> <ins><span
+                                                    class="amount">₹{{item?.discount_price?.toFixed(2) }}</span></ins></p>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+
+                                    <button class="btn btn-primary">Buy Again</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row p-2" *ngIf="orders?.length == 0">
+                        No Orders Available
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container -->
+            </section>
+            
+        </div>
+        <div class="tab-pane fade mt-15" id="tab3-2">
+
+            <section class="wrapper">
+                <div class="container">
+                    <div class="row gx-md-8 gx-xl-12 gy-12" *ngIf="returns?.length > 0">
+                        <div class="col-sm-12 mt-5 bg-light pt-3 pb-3" *ngFor="let value of returns; let i=index">
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <div>
+                                    <h4 class="mb-0">{{value?.order?.order_id}}</h4>
+                                    <p class="mb-0">{{value?.get_placed_at}}</p>
+                                </div>
+                                <h4 class="mb-0" [ngClass]="{'order-cancel': value.status == 'Cancelled', 'order-delivered': value.status == 'Delivered'}">{{value?.status}}</h4>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <h4 class="mb-0">{{value?.payment_method?.title}}</h4>
+                                <div class="order-detail-return">
+                                <button class="order-details me-2" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal-details2" (click)="openReturn(i)">Order Details</button>
+                                    <!-- <button *ngIf="value?.status == 'Delivered'" class="order-details" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal-return" (click)="openOrder(i)">Return</button>
+                                    <button *ngIf="value?.status == 'New'" class="order-details" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modal-cancel" (click)="cancelOrder(i)">Cancel</button> -->
+                            </div>
+                                </div>
+                            <div *ngFor="let item of value.products;let pi=index" class="d_flex justify-content-between align-items-center mb-5">
+                                <div class="option text-start d-flex flex-row align-items-center ps-0 ">
+                                    <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                        *ngIf="item['product']['image']" 
+                                        [alt]="item['product']['title']" 
+                                        [src]="item['product']['image']"
+                                     /></a>
+                                    </figure>
+                                    <div class="w-100 ms-4">
+                                        <h3 class="post-title h6 lh-xs mb-1"><a [href]="'/p/'+item['product']['id']"
+                                                class="link-dark">{{item?.product?.title}}</a></h3>
+                                        <div class="small">Color: Black</div>
+                                        <div class="small">Size: 43</div>
+                                        <p class="price"><del><span class="amount">₹{{item?.mrp?.toFixed(2)}}</span></del> <ins><span
+                                                    class="amount">₹{{item?.discount_price?.toFixed(2) }}</span></ins></p>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+
+                                    <button class="btn btn-primary">Buy Again</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row p-2" *ngIf="returns?.length == 0">
+                        No Returns Available
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container -->
+            </section>
+        </div>
+    </div>
+</div>
+ 
+<section class="wrapper " *ngIf="loader">
+    <div class="container ">
+        <div class="row gx-md-8 gx-xl-12 gy-12">
+            <div class="col-sm-12">
+                <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 400,
+                    'width.%':100,
+                    'margin-bottom':'20px',
+                    'background-color': '#F9F7F6',
+                    'display':'block'}">
+                </ngx-skeleton-loader>
+            </div>
+        </div>
+       
+    </div>
+</section>
+</div>
+
+<ng-template #error_component>
+    <div class="no-results">
+        <!-- <div class="no-result-image"><img alt="no results" src="assets/images/no-result.svg"></div> -->
+        <div class="no-result-matching">NO RESULTS FOUND MATCHING</div>
+    </div>
+  </ng-template>
+
+  <div class="modal fade " id="modal-cancel" tabindex="-1" *ngIf="orders?.length">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content text-center">
+            <div class="modal-body bg-soft-primary">
+                <button type="button" class="btn-close cancelModal" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h3>Cancel Order</h3>
+                        <h3>{{order.order_id}}</h3>
+                        </div>
+                            <div class="form-select-wrapper">
+                                <select class="form-select form-select-sm w-100" [(ngModel)]="selectedReason">
+                                    <option *ngFor="let option of cancel_reasons" [ngValue]="option"
+                                        [attr.selected]="option.id == selectedReason.id ? true : null">
+                                        {{option.title}} </option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary mt-3" (click)="confirmCancel(order.id)" [disabled]="this.cancel_processing">Cancel Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  <div class="modal fade " id="modal-details" tabindex="-1" *ngIf="orders?.length">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content text-center">
+            <div class="modal-body bg-soft-primary">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div class="table-responsive bg-light mb-5" style="padding: 0 15px;">
+                    <table class="table text-center shopping-cart">
+                        <thead>
+                            <tr>
+                                <th class="ps-0 w-25">
+                                    <div class="h4 mb-0 text-start">Product</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Unit Cost</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Quantity</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Amount</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of order?.products;let pi=index">
+                                <td class="option text-start d-flex flex-row align-items-center ps-0">
+                                    <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                        *ngIf="item['product']['image']" 
+                                        [alt]="item['product']['title']" 
+                                        [src]="item['product']['image']" /></a></figure>
+                                    <div class="w-100 ms-4">
+                                        <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                                class="link-dark">{{item?.product?.title}}</a></h3>
+                                        <div class="small">Color: Black</div>
+                                        <div class="small">Size: 43</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="price">
+                                        <!-- <del><span class="amount"></span></del>  -->
+                                        <ins><span class="amount">₹{{item?.mrp?.toFixed(2)}}</span></ins></p>
+                                </td>
+                                <td>
+                                    <p class="mb-0">{{item?.quantity}}</p>
+                                </td>
+                                <td>
+                                    <p class="price"><span class="amount">₹{{item?.discount_price?.toFixed(2) }}</span></p>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td class="option text-start d-flex flex-row align-items-center ps-0">
+                                    <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                                src="./assets/img/photos/sth3.jpg"
+                                                srcset="./assets/img/photos/sth3@2x.jpg 2x" alt="" /></a></figure>
+                                    <div class="w-100 ms-4">
+                                        <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                                class="link-dark">Polaroid Camera</a></h3>
+                                        <div class="small">Color: Black</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="price"><span class="amount">$45.00</span></p>
+                                </td>
+                                <td>
+                                    <p class="mb-0">1</p>
+                                </td>
+                                <td>
+                                    <p class="price"><span class="amount">$45.00</span></p>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="bg-light pad-20">
+                            <h4 class="text-start">Details</h4>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Order ID : </p>
+                                <p class="mb-0">{{order.order_id}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Placed On : </p>
+                                <p class="mb-0">{{order.get_placed_at}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Payment mode : </p>
+                                <p class="mb-0">{{order.payment_method.title}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Total items : </p>
+                                <p class="mb-0">{{order.get_quantity}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="bg-light pad-20">
+                            <h4 class="text-start">Order Summary</h4>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Sub Total : </p>
+                                <p class="mb-0">₹{{order.subtotal}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Discount : </p>
+                                <p class="mb-0">₹{{order.discount}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Delivery Charges : </p>
+                                <p class="mb-0">₹{{order.delivery_charges}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Total Amount : </p>
+                                <p class="mb-0">₹{{order.total_amount}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="bg-light pad-20 h-100 text-start">
+                            <h4>Billing Address</h4>
+                            <p class="mb-0">
+                                {{order.billing_address.address}}, {{order.billing_address.locality}} <br>
+                                <!-- {{order.billing_address.landmark}} <br>  -->
+                                {{order.billing_address.city}}, {{order.billing_address.state}}, {{order.billing_address.pincode}} 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade " id="modal-details2" tabindex="-1" *ngIf="returns?.length">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content text-center">
+            <div class="modal-body bg-soft-primary">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div class="table-responsive bg-light mb-5" style="padding: 0 15px;">
+                    <table class="table text-center shopping-cart">
+                        <thead>
+                            <tr>
+                                <th class="ps-0 w-25">
+                                    <div class="h4 mb-0 text-start">Product</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Unit Cost</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Quantity</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Amount</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of return?.products;let pi=index">
+                                <td class="option text-start d-flex flex-row align-items-center ps-0">
+                                    <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                        *ngIf="item['product']['image']" 
+                                        [alt]="item['product']['title']" 
+                                        [src]="item['product']['image']" /></a></figure>
+                                    <div class="w-100 ms-4">
+                                        <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                                class="link-dark">{{item?.product?.title}}</a></h3>
+                                        <div class="small">Color: Black</div>
+                                        <div class="small">Size: 43</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="price">
+                                        <!-- <del><span class="amount"></span></del>  -->
+                                        <ins><span class="amount">₹{{item?.mrp?.toFixed(2)}}</span></ins></p>
+                                </td>
+                                <td>
+                                    <p class="mb-0">{{item?.quantity}}</p>
+                                </td>
+                                <td>
+                                    <p class="price"><span class="amount">₹{{item?.discount_price?.toFixed(2) }}</span></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="bg-light pad-20">
+                            <h4 class="text-start">Details</h4>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Order ID : </p>
+                                <p class="mb-0">{{return?.order?.order_id}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Placed On : </p>
+                                <p class="mb-0">{{return?.get_placed_at}}</p>
+                            </div>
+                            <!-- <div class="d-flex justify-content-between">
+                                <p class="mb-0">Payment mode : </p>
+                                <p class="mb-0">{{order.payment_method.title}}</p>
+                            </div> -->
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Total items : </p>
+                                <p class="mb-0">{{return?.total_quantity}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="bg-light pad-20">
+                            <h4 class="text-start">Order Summary</h4>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Sub Total : </p>
+                                <p class="mb-0">₹{{return?.subtotal}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Discount : </p>
+                                <p class="mb-0">₹{{return?.discount}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Delivery Charges : </p>
+                                <p class="mb-0">₹{{return?.delivery_charges}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Total Amount : </p>
+                                <p class="mb-0">₹{{return?.total_amount}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <!-- <div class="bg-light pad-20 h-100 text-start">
+                            <h4>Billing Address</h4>
+                            <p class="mb-0">
+                                {{order.billing_address.address}}, {{order.billing_address.locality}} <br>
+                                {{order.billing_address.city}}, {{order.billing_address.state}}, {{order.billing_address.pincode}} 
+                            </p>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade " id="modal-return" tabindex="-1" *ngIf="orders?.length">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content text-center">
+            <div class="modal-body bg-soft-primary">
+                <button type="button" class="btn-close returnModal" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div class="table-responsive bg-light mb-5" style="padding: 0 15px;">
+                    <table class="table text-center shopping-cart">
+                        <thead>
+                            <tr>
+                                <th class="ps-0 w-25">
+                                    <div class="h4 mb-0 text-start">Product</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Unit Cost</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Ordered Qty</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Return Qty</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Reason</div>
+                                </th>
+                                <th>
+                                    <div class="h4 mb-0">Amount</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of order?.products;let pi=index">
+                                <td class="option text-start d-flex flex-row align-items-center ps-0">
+                                    <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                        *ngIf="item['product']['image']" 
+                                        [alt]="item['product']['title']" 
+                                        [src]="item['product']['image']" /></a></figure>
+                                    <div class="w-100 ms-4">
+                                        <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                                class="link-dark">{{item?.product?.title}}</a></h3>
+                                        <div class="small">Color: Black</div>
+                                        <div class="small">Size: 43</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="price"><ins><span
+                                                class="amount">₹{{item?.mrp?.toFixed(2)}}</span></ins></p>
+                                </td>
+                                <td>
+                                    <p>{{item?.quantity}}</p>
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-sm"
+                                     *ngIf="item.is_return.is_return" (change)="updateReturnProductsQuantity($event, item)">
+                                        <option *ngFor="let option of createArrayUpToNumber(item.quantity)" [ngValue]="option">
+                                            {{option}} </option>
+                                    </select>
+                                    <p *ngIf="!item.is_return.is_return">-</p>
+                                </td>
+                                <td>
+                                    <div class="form-select-wrapper" *ngIf="item.is_return.is_return">
+                                        <select class="form-select form-select-sm" (change)="updateReturnProductsReason($event, item)">
+                                            <option *ngFor="let option of return_reasons" [ngValue]="option"
+                                                >
+                                                {{option.title}} </option>
+                                        </select>
+                                        <p *ngIf="!item.is_return.is_return">-</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="price"><span class="amount">₹{{item?.discount_price?.toFixed(2) }}</span></p>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="btn btn-primary mt-3" (click)="confirmReturn(order.id)" [disabled]="this.return_processing">Confirm Return</button>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display: none;" #invoice>
+    <div class="table-responsive bg-light mb-5" style="padding: 0 15px;">
+        <table class="table text-center shopping-cart">
+            <thead>
+                <tr>
+                    <th class="ps-0 w-25">
+                        <div class="h4 mb-0 text-start">Product</div>
+                    </th>
+                    <th>
+                        <div class="h4 mb-0">Unit Cost</div>
+                    </th>
+                    <th>
+                        <div class="h4 mb-0">Quantity</div>
+                    </th>
+                    <th>
+                        <div class="h4 mb-0">Amount</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of order?.products;let pi=index">
+                    <td class="option text-start d-flex flex-row align-items-center ps-0">
+                        <figure class="rounded w-17"><a href="./shop-product.html"><img
+                            *ngIf="item['product']['image']" 
+                            [alt]="item['product']['title']" 
+                            [src]="item['product']['image']" /></a></figure>
+                        <div class="w-100 ms-4">
+                            <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                    class="link-dark">{{item?.product?.title}}</a></h3>
+                            <div class="small">Color: Black</div>
+                            <div class="small">Size: 43</div>
+                        </div>
+                    </td>
+                    <td>
+                        <p class="price">
+                            <!-- <del><span class="amount"></span></del>  -->
+                            <ins><span class="amount">₹{{item?.mrp?.toFixed(2)}}</span></ins></p>
+                    </td>
+                    <td>
+                        <p class="mb-0">{{item?.quantity}}</p>
+                    </td>
+                    <td>
+                        <p class="price"><span class="amount">₹{{item?.discount_price?.toFixed(2) }}</span></p>
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <td class="option text-start d-flex flex-row align-items-center ps-0">
+                        <figure class="rounded w-17"><a href="./shop-product.html"><img
+                                    src="./assets/img/photos/sth3.jpg"
+                                    srcset="./assets/img/photos/sth3@2x.jpg 2x" alt="" /></a></figure>
+                        <div class="w-100 ms-4">
+                            <h3 class="post-title h6 lh-xs mb-1"><a href="./shop-product.html"
+                                    class="link-dark">Polaroid Camera</a></h3>
+                            <div class="small">Color: Black</div>
+                        </div>
+                    </td>
+                    <td>
+                        <p class="price"><span class="amount">$45.00</span></p>
+                    </td>
+                    <td>
+                        <p class="mb-0">1</p>
+                    </td>
+                    <td>
+                        <p class="price"><span class="amount">$45.00</span></p>
+                    </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="bg-light pad-20">
+                <h4 class="text-start">Details</h4>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Order ID : </p>
+                    <p class="mb-0">{{order.order_id}}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Placed On : </p>
+                    <p class="mb-0">{{order.get_placed_at}}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Payment mode : </p>
+                    <p class="mb-0">{{order.payment_method.title}}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Total items : </p>
+                    <p class="mb-0">{{order.get_quantity}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="bg-light pad-20">
+                <h4 class="text-start">Order Summary</h4>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Sub Total : </p>
+                    <p class="mb-0">₹{{order.subtotal}}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Discount : </p>
+                    <p class="mb-0">₹{{order.discount}}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Delivery Charges : </p>
+                    <p class="mb-0">₹{{order.delivery_charges}}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Total Amount : </p>
+                    <p class="mb-0">₹{{order.total_amount}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="bg-light pad-20 h-100 text-start">
+                <h4>Billing Address</h4>
+                <p class="mb-0">
+                    {{order.billing_address.address}}, {{order.billing_address.locality}} <br>
+                    <!-- {{order.billing_address.landmark}} <br>  -->
+                    {{order.billing_address.city}}, {{order.billing_address.state}}, {{order.billing_address.pincode}} 
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

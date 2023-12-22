@@ -1,0 +1,114 @@
+<section class="wrapper bg-light" *ngIf="!loading && blogData && blogData.length > 0">
+    <div class="container pt-5 pt-md-10 pb-md-3 pb-2">
+        <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0">
+            <div class="col-lg-4 mt-lg-2">
+                <h2 class="display-4 mb-3">Our Latest Blogs</h2>
+                <p class="lead fs-lg mb-6 pe-xxl-5">Discover the captivating world of artisanal wonders through our
+                    insightful blog posts</p>
+                <a href="#" class="btn btn-soft-primary rounded-pill" routerLink="/blog-list">View All</a>
+            </div>
+            <!-- /column -->
+            <div class="col-lg-8">
+                <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                    <div class="new-prod-container" ngxSlickItem class="slide" *ngFor="let blogEntry of blogData">
+                        <article class="item post col-md-12 w-90">
+                            <div class="card">
+                                <figure class="card-img-top overlay overlay-1 hover-scale">
+                                    <a [href]="['/blog-details/'+ blogEntry.slug]">
+                                        <img [src]="'https://hcb.gftpl.in'+ blogEntry.image" alt="Blog Image" />
+                                        <span class="bg"></span>
+                                    </a>
+                                    <figcaption>
+                                        <h5 class="from-top mb-0">Read More</h5>
+                                    </figcaption>
+                                </figure>
+                                <div class="card-body">
+                                    <div class="post-header">
+                                        <div class="post-category text-line">
+                                            <a [href]="['/blog-details/'+ blogEntry.slug]" class="hover"
+                                                rel="category">{{ blogEntry.author_name }}</a>
+                                        </div>
+                                        <!-- /.post-category -->
+                                        <h2 class="post-title h3 mt-1 mb-3">
+                                            <a class="link-dark"  [href]="['/blog-details/'+ blogEntry.slug]">{{ blogEntry.title }}</a>
+                                        </h2>
+                                    </div>
+                                    <!-- /.post-header -->
+                                    <div class="post-content">
+                                        <p class="limitText">{{ blogEntry.short_description }}</p>
+                                    </div>
+                                    <!-- /.post-content -->
+                                </div>
+                                <!--/.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </article>
+                    </div>
+                </ngx-slick-carousel>
+            </div>
+            <!-- /column -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
+
+<section class="wrapper bg-light" *ngIf="loading">
+    <div class="container pt-5 pt-md-10 pb-md-3 pb-2">
+        <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0">
+            <div class="col-lg-4 mt-lg-2">
+                <div class="col-lg-6">
+                    <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 30,
+                    'width.%':50,
+                    'margin-bottom':'20px',
+                    'display':'block',
+                    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 15,
+                    'width.%':100,
+                    'margin-bottom':'20px',
+                    'display':'block',
+                    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 15,
+                    'width.%':80,
+                    'margin-bottom':'20px',
+                    'display':'block',
+                    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" [theme]="{
+                    'height.px': 50,
+                    'width.%':30,
+                    'margin-bottom':'20px',
+                    'display':'block',
+                    'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                </div>
+            </div>
+            <!-- /column -->
+            <div class="col-lg-8">
+                <div class="row m-0 w-100">
+                    <div class="col-lg-6">
+                        <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 490,
+                        'width.%':100,
+                        'margin':'auto',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    </div>
+                    <div class="col-lg-6">
+                        <ngx-skeleton-loader count="1" [theme]="{
+                        'height.px': 490,
+                        'width.%':100,
+                        'margin':'auto',
+                        'display':'block',
+                        'background-color': '#F9F7F6'}"></ngx-skeleton-loader>
+                    </div>
+                </div>
+            </div>
+            <!-- /column -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
+<!-- /section -->

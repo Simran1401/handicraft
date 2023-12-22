@@ -1,0 +1,7 @@
+.ro{
+    flex-direction: row-reverse;
+}
+
+.sticky-sidebar{
+    top: 10% !important;
+}
